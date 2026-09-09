@@ -1,0 +1,21 @@
+{
+  "name": "Organization",
+  "description": "A community-based organization that may schedule rides for enrolled participants it is authorized to represent.",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "short_name": { "type": "string" },
+    "status": { "type": "string", "enum": ["applied", "approved", "suspended", "ended"], "default": "applied" },
+    "primary_contact_name": { "type": "string" },
+    "primary_contact_email": { "type": "string", "format": "email" },
+    "primary_contact_phone": { "type": "string" },
+    "mailing_address": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "agreement_document_id": { "type": "string", "description": "LegalDocument id for the signed Organization Participation Agreement." },
+    "agreement_accepted_at": { "type": "string", "format": "date-time" },
+    "mou_on_file": { "type": "boolean", "default": false },
+    "notes": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["name"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}

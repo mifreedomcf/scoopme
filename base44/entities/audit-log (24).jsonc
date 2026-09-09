@@ -1,0 +1,28 @@
+{
+  "name": "RoleAssignment",
+  "description": "Grants a privileged role to a user. Every privileged role requires admin approval, recorded here with approver and timestamp. A user may hold several roles. Clients can never write this entity; role changes go through backend functions only.",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "user_email": { "type": "string", "format": "email" },
+    "role": {
+      "type": "string",
+      "enum": ["adult_rider", "guardian", "volunteer_driver", "org_scheduler", "org_admin", "dispatcher", "safety_staff", "platform_admin"],
+      "description": "adult_rider is self-serve; every other role requires approval."
+    },
+    "organization_id": { "type": "string", "description": "Required for org_scheduler and org_admin." },
+    "status": { "type": "string", "enum": ["requested", "approved", "suspended", "revoked"], "default": "requested" },
+    "approved_by_email": { "type": "string", "format": "email" },
+    "approved_at": { "type": "string", "format": "date-time" },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "revoked_reason_code": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "required": ["user_id", "user_email", "role"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

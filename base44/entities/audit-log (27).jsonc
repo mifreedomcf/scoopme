@@ -1,0 +1,29 @@
+{
+  "name": "UserProfile",
+  "description": "Application profile for an authenticated user. Public-safe fields are separated from private identity fields, which carry field-level security. Roles are NOT stored here; see RoleAssignment.",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string", "description": "Base44 user id." },
+    "email": { "type": "string", "format": "email" },
+    "display_name": { "type": "string", "description": "Public-safe first name plus last initial." },
+    "preferred_language": { "type": "string", "default": "en" },
+    "communication_preference": { "type": "string", "enum": ["sms", "email", "call", "in_app"], "default": "sms" },
+    "accessibility_notes": { "type": "string", "description": "Assistance the person wants staff to know about. Never a diagnosis field.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "phone": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "legal_first_name": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } }, "write": { "user_condition": { "role": "admin" } } } },
+    "legal_last_name": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } }, "write": { "user_condition": { "role": "admin" } } } },
+    "date_of_birth": { "type": "string", "format": "date", "description": "Collected only where an age gate requires it.", "rls": { "read": { "user_condition": { "role": "admin" } }, "write": { "user_condition": { "role": "admin" } } } },
+    "identity_verification_status": { "type": "string", "enum": ["not_started", "pending", "verified", "failed"], "default": "not_started", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "onboarding_complete": { "type": "boolean", "default": false },
+    "suspended": { "type": "boolean", "default": false, "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "suspended_reason_code": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } }, "write": { "user_condition": { "role": "admin" } } } },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["user_id", "email"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

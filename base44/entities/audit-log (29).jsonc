@@ -1,0 +1,20 @@
+{
+  "name": "VehicleCapability",
+  "description": "A verified accommodation a vehicle can provide. Only verified capabilities are usable by the matcher; a driver's self-report alone never satisfies a rider's access need.",
+  "type": "object",
+  "properties": {
+    "vehicle_id": { "type": "string" },
+    "driver_profile_id": { "type": "string" },
+    "capability": {
+      "type": "string",
+      "enum": ["wheelchair_lift", "wheelchair_ramp", "wheelchair_securement", "booster_seat", "forward_facing_car_seat", "rear_facing_car_seat", "service_animal_ok", "extra_passenger_space", "step_stool", "oxygen_tank_space"]
+    },
+    "quantity": { "type": "integer", "default": 1, "minimum": 0 },
+    "verification_status": { "type": "string", "enum": ["self_reported", "verified", "rejected", "expired"], "default": "self_reported", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "verified_by_email": { "type": "string", "format": "email", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "verified_at": { "type": "string", "format": "date-time" },
+    "expiration_date": { "type": "string", "format": "date" }
+  },
+  "required": ["vehicle_id", "driver_profile_id", "capability"],
+  "rls": { "create": false, "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] }, "update": false, "delete": false }
+}

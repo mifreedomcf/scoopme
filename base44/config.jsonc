@@ -1,0 +1,18 @@
+// Scoop Me — Base44 project configuration
+// Docs: https://docs.base44.com/developers/backend/overview/project-structure
+{
+  "name": "scoop-me",
+  "description": "Scoop Me — free, scheduled community rides to local resources. Closed Detroit pilot.",
+  "visibility": "private", // Pilot stays private until the launch gate is complete.
+
+  "entitiesDir": "./entities",
+  "functionsDir": "./functions",
+  "authDir": "./auth",
+
+  "site": {
+    "outputDirectory": "../dist",
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
+    "serveCommand": "npm run dev"
+  }
+}

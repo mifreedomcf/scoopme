@@ -1,0 +1,30 @@
+{
+  "name": "DriverCredential",
+  "description": "One credential, check, or certification per row. Stores a vendor reference, status, decision category, and dates — never a full report and never a Social Security number. Expiry immediately suspends ride eligibility.",
+  "type": "object",
+  "properties": {
+    "driver_profile_id": { "type": "string" },
+    "credential_type": {
+      "type": "string",
+      "enum": [
+        "drivers_license", "vehicle_registration", "auto_insurance", "insurer_volunteer_acknowledgement",
+        "vehicle_inspection", "mvr_check", "criminal_background_check", "sex_offender_registry_check",
+        "fingerprinting", "child_abuse_neglect_registry", "cpr", "first_aid", "cdl",
+        "wheelchair_lift_inspection", "securement_training", "car_seat_availability", "language_certification", "other"
+      ]
+    },
+    "required_for": { "type": "string", "enum": ["adult_transport", "minor_transport", "accommodation_only"], "default": "adult_transport" },
+    "status": { "type": "string", "enum": ["not_started", "submitted", "pending_vendor", "verified", "rejected", "expired"], "default": "not_started", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "vendor_name": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "vendor_reference_id": { "type": "string", "description": "Opaque vendor reference. No report content is stored.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "decision_reason_category": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "completed_date": { "type": "string", "format": "date" },
+    "expiration_date": { "type": "string", "format": "date" },
+    "document_reference": { "type": "string", "description": "Private storage file_uri. Never a public URL.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "verified_by_email": { "type": "string", "format": "email", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "verified_at": { "type": "string", "format": "date-time", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "expiry_notice_sent_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["driver_profile_id", "credential_type"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}

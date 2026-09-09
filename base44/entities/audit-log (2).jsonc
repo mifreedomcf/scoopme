@@ -1,0 +1,19 @@
+{
+  "name": "DataRetentionHold",
+  "description": "Litigation / incident / insurance hold. While an active hold covers a record, deletion and anonymization jobs must skip it and ordinary delete is refused server-side.",
+  "type": "object",
+  "properties": {
+    "hold_key": { "type": "string" },
+    "scope_entity": { "type": "string", "description": "Entity name under hold." },
+    "scope_id": { "type": "string", "description": "Specific record id, or blank for an entity-wide hold." },
+    "reason": { "type": "string", "enum": ["litigation", "incident", "insurance", "safeguarding", "audit", "tax", "regulatory"] },
+    "opened_by_email": { "type": "string", "format": "email" },
+    "opened_at": { "type": "string", "format": "date-time" },
+    "released_by_email": { "type": "string", "format": "email" },
+    "released_at": { "type": "string", "format": "date-time" },
+    "is_active": { "type": "boolean", "default": true },
+    "notes": { "type": "string" }
+  },
+  "required": ["scope_entity", "reason", "opened_at"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}

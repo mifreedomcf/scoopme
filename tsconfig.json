@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": ["vitest/globals", "node"],
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"], "@shared/*": ["./base44/shared/*"] }
+  },
+  "include": ["src", "tests", "base44/shared", "vite.config.ts"],
+  // runtime.ts is Deno code: it uses npm: specifiers and is type-checked by the
+  // Base44 deploy pipeline, not by the browser tsconfig.
+  "exclude": ["base44/functions", "base44/shared/runtime.ts", "node_modules", "dist"]
+}

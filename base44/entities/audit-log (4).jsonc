@@ -1,0 +1,21 @@
+{
+  "name": "DriverAvailability",
+  "description": "A window in which a driver is willing to volunteer. Used by the deterministic matcher for conflict detection.",
+  "type": "object",
+  "properties": {
+    "driver_profile_id": { "type": "string" },
+    "starts_at": { "type": "string", "format": "date-time" },
+    "ends_at": { "type": "string", "format": "date-time" },
+    "recurrence": { "type": "string", "enum": ["none", "weekly"], "default": "none" },
+    "weekday": { "type": "integer", "minimum": 0, "maximum": 6 },
+    "status": { "type": "string", "enum": ["active", "canceled"], "default": "active" },
+    "notes": { "type": "string" }
+  },
+  "required": ["driver_profile_id", "starts_at", "ends_at"],
+  "rls": {
+    "create": { "user_condition": { "id": "{{user.id}}" } },
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": { "created_by": "{{user.email}}" }
+  }
+}

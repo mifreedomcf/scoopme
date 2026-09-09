@@ -1,0 +1,16 @@
+{
+  "name": "IncidentAttachment",
+  "description": "Evidence attached to a safety incident. Stored as a private storage reference; a signed URL is minted per access request and that access is audited.",
+  "type": "object",
+  "properties": {
+    "incident_id": { "type": "string" },
+    "file_reference": { "type": "string", "description": "Private file_uri. Never a public URL." },
+    "content_type": { "type": "string" },
+    "size_bytes": { "type": "integer" },
+    "scan_status": { "type": "string", "enum": ["pending", "clean", "flagged", "failed"], "default": "pending" },
+    "uploaded_by_email": { "type": "string", "format": "email" },
+    "uploaded_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["incident_id", "file_reference"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}
