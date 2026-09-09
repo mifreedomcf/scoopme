@@ -1,0 +1,22 @@
+{
+  "name": "ResourcePartner",
+  "description": "A community partner whose resources riders travel to. Every operational detail is admin-editable and starts blank rather than guessed. Nothing here represents the partner as the platform operator, carrier, insurer, or agent.",
+  "type": "object",
+  "properties": {
+    "slug": { "type": "string" },
+    "name": { "type": "string" },
+    "public_description": { "type": "string", "description": "Admin-editable. Blank until the partner approves the wording." },
+    "acknowledgement_text": { "type": "string", "description": "Optional partner acknowledgement. Published only when acknowledgement_approved is true." },
+    "acknowledgement_approved": { "type": "boolean", "default": false },
+    "contact_name": { "type": "string" },
+    "contact_email": { "type": "string", "format": "email" },
+    "contact_phone": { "type": "string" },
+    "escalation_contact": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "website_url": { "type": "string", "format": "uri" },
+    "mou_on_file": { "type": "boolean", "default": false },
+    "status": { "type": "string", "enum": ["draft", "published", "paused", "ended"], "default": "draft" },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["slug", "name"],
+  "rls": { "create": false, "read": true, "update": false, "delete": false }
+}

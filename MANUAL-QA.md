@@ -1,4 +1,4 @@
-# Manual QA — Milestone 1
+# Manual QA — Milestones 1 and 2
 
 Run against a freshly seeded app. Every step lists what you should see; anything
 else is a bug.
@@ -117,3 +117,123 @@ else is a bug.
 - Screen reader: navigate by heading. Every page has one `h1` and a logical
   heading order. Status changes announce via the `role="status"` regions.
 - Contrast: check the marigold band, the disabled button, and the status pills.
+
+
+---
+
+# Milestone 2 scenarios
+
+## K. Credential centre and expiry
+
+1. As an approved-application driver, open `/driver/credentials`. Expect two
+   groups: documents you upload, and checks a coordinator runs. Expect no upload
+   control on the vendor checks.
+2. Add an insurance document with a filename of `policy.pdf.exe`. Expect a
+   rejection about extra dots.
+3. Add `policy.pdf` with a private reference and a future expiry. Expect
+   "Uploaded. A coordinator reviews it once the file has been scanned."
+4. As safety staff, call `review-driver-credential` to verify it. Expect
+   `document_not_scanned` — no scanner is configured, so nothing can be verified
+   yet. This is the correct result.
+5. Verify a credential that has no document. Then set its expiry to yesterday and
+   run `credential-expiry-sweep`. Expect the credential to become `expired`, the
+   driver's eligibility to become `suspended_expired_credential`, and their open
+   offers to become `withdrawn`.
+6. Reload `/driver` as that driver. Expect no offers and a pointer to the
+   documents page. Reload `/driver/credentials`. Expect the missing item named
+   in plain words.
+
+## L. Self-review is blocked everywhere
+
+1. As a safety-staff user who is also a driver, try to verify your own
+   credential, your own vehicle, and your own application. Expect `403` on all
+   three and a `self_review_blocked` audit row.
+
+## M. Vehicles and accommodations
+
+1. As a driver, open `/driver/car` and add a car built six or more years ago.
+   Expect the confirmation to mention the annual mechanic inspection.
+2. Tick "Wheelchair lift". Save. Expect the capability to show "not checked yet".
+3. As staff, call `review-vehicle` with `vehicle_status: "active"` and no
+   inspection. Expect `inspection_required`.
+4. Add a passed inspection with a future expiry, then set active. Expect success.
+5. Approve a ride needing a wheelchair lift while the capability is still
+   self-reported. Expect zero offers published. Verify the capability, re-approve,
+   expect the driver to appear.
+
+## N. Availability
+
+1. Add a window. Add an overlapping one. Expect `overlapping_window`.
+2. Add a 20-hour window. Expect a refusal naming the 14-hour limit.
+3. Take a ride inside a window, then try to remove that window. Expect
+   `window_has_committed_ride` telling you to release the ride first.
+
+## O. Identity verification at pickup
+
+1. Take a ride to `arrived_pickup` as the driver. Open `/driver/rides/<id>`.
+   Expect a code box and no code anywhere on the page.
+2. Inspect the network response for `reveal-ride-details` as the driver. Confirm
+   there is no `verification_code` field at all.
+3. Type a wrong code five times. Expect the remaining-tries count to fall, then
+   `too_many_attempts` telling you not to start the ride and to call the safety
+   line. Check `RideEvent` for five `identity_code_mismatch` rows.
+4. As the rider, read the code off `/rides/<id>`. Enter it as the driver. Expect
+   the ride to move to `rider_verified`.
+
+## P. Check-in timers
+
+1. Put a ride in `confirmed` with a pickup time 20 minutes ago. Run
+   `ride-checkin-sweep`. Expect an `overdue_departure` escalation at level 1, an
+   in-app alert to dispatch only, and a `RideEvent` of type `escalation`.
+2. Run it again immediately. Expect no second alert.
+3. Move the pickup time to 40 minutes ago and run again. Expect level 2, alerts
+   to dispatch and safety staff, and a new SafetyIncident with source
+   `escalation_timer` whose narrative says no assessment has been made.
+4. Confirm the ride is still in `confirmed` — the sweep never moves or cancels a
+   ride.
+5. As the driver, move the ride to `en_route`. Confirm the escalation level
+   resets to 0.
+
+## Q. Incidents and holds
+
+1. As a rider on a live ride, open "Report a safety concern". Expect the 911
+   block above the form and the note that the form does not contact emergency
+   services.
+2. Submit a `suspected_abuse_neglect` report. Expect the ride to move to
+   `incident_hold`, a `DataRetentionHold` to open, and safety staff to be
+   notified with a message containing no address and no narrative.
+3. As safety staff, open `/safety`. Try to resolve it without ticking the
+   mandated report. Expect `mandated_report_required`.
+4. Tick it, resolve, then try to release the hold as safety staff. Expect a
+   refusal — platform admin only. As platform admin with a 10-character
+   justification, expect a refusal. With 40+ characters, expect success and an
+   `override` audit row.
+5. Attach evidence to the incident. Expect `scan_status: "pending"` and
+   `viewable: false`.
+
+## R. Offers and declining
+
+1. As a driver with an open offer, choose "Not this one". Expect it to disappear
+   and the copy confirming that declining is not held against you.
+2. Decline the last open offer on a ride. Expect the ride to return to
+   `waitlisted` with `all_offers_declined`, visible on the dispatch board.
+
+## S. Notifications
+
+1. Run `dispatch-notifications`. With no provider configured, expect email and
+   SMS rows to become `suppressed_provider_missing`, never `sent`, and in-app
+   rows to send.
+2. Hand-edit a queued notification body to contain a ride's pickup address, then
+   run the dispatcher. Expect `failed` with `redaction_check_failed` and a
+   `notification.blocked` audit row.
+3. As platform admin, resend one notification. Expect a `notification.resend`
+   audit row naming you.
+
+## T. Outage manifest
+
+1. On the Dispatch board, pull a manifest with a 5-character purpose. Expect a
+   refusal.
+2. Pull one with a 5-day range. Expect `range_too_wide`.
+3. Pull a valid one. Expect a row count, the handling notice about shredding,
+   and an `export.sensitive` audit row carrying your purpose and the range.
+4. As a rider or driver, call the same function. Expect `403`.

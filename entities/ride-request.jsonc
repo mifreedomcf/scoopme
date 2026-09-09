@@ -1,0 +1,82 @@
+{
+  "name": "RideRequest",
+  "description": "A scheduled ride request. Riders are never charged. Exact addresses carry field-level security so only the requester and authorized staff can read them from the client; a matched driver receives them through the reveal-ride-details function inside the reveal window. Status is changed only by the transition-ride function.",
+  "type": "object",
+  "properties": {
+    "rider_user_id": { "type": "string" },
+    "rider_profile_id": { "type": "string" },
+    "dependent_profile_id": { "type": "string", "description": "Milestone 4 only. Must be blank while minor_rides_enabled is false." },
+    "rider_kind": { "type": "string", "enum": ["adult", "minor"], "default": "adult" },
+    "requested_by_user_id": { "type": "string", "description": "Who created the request; may differ from the rider." },
+    "requested_by_kind": { "type": "string", "enum": ["self", "org_scheduler", "dispatcher", "guardian"], "default": "self" },
+    "organization_id": { "type": "string" },
+    "participant_authorization_id": { "type": "string", "description": "Required when requested_by_kind is org_scheduler." },
+    "consent_record_id": { "type": "string", "description": "Milestone 4. Guardian consent is never satisfied by an organization authorization." },
+
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft", "submitted", "eligibility_review", "awaiting_consent", "approved", "offered", "claimed",
+        "confirmed", "en_route", "arrived_pickup", "rider_verified", "in_progress", "arrived_dropoff",
+        "handoff_verified", "completed", "waitlisted", "canceled", "driver_canceled", "rider_no_show",
+        "failed_handoff", "incident_hold", "closed_by_admin"
+      ],
+      "default": "draft"
+    },
+    "status_reason_code": { "type": "string" },
+
+    "pickup_address": { "type": "string", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "pickup_zip": { "type": "string" },
+    "pickup_area_label": { "type": "string", "description": "Coarse label safe to show an unassigned driver." },
+    "pickup_latitude": { "type": "number", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "pickup_longitude": { "type": "number", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "pickup_geo_status": { "type": "string", "enum": ["unvalidated", "in_service_area", "outside_service_area", "unresolvable", "manual_review"], "default": "unvalidated", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+
+    "destination_location_id": { "type": "string" },
+    "destination_address": { "type": "string", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "destination_zip": { "type": "string" },
+    "destination_area_label": { "type": "string" },
+    "destination_latitude": { "type": "number", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "destination_longitude": { "type": "number", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "destination_geo_status": { "type": "string", "enum": ["unvalidated", "in_service_area", "outside_service_area", "unresolvable", "manual_review"], "default": "unvalidated", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "resource_category": {
+      "type": "string",
+      "enum": ["food_pantry", "free_fridge", "mutual_aid_supplies", "clothing", "social_services", "education_program", "workforce", "non_emergency_appointment", "community_event", "other"],
+      "description": "Category only. The platform never collects a diagnosis, treatment detail, immigration status, or SSN."
+    },
+
+    "requested_pickup_at": { "type": "string", "format": "date-time" },
+    "arrival_by_at": { "type": "string", "format": "date-time", "description": "When the rider needs to be there." },
+    "flexible_window_minutes": { "type": "integer", "default": 30, "minimum": 0, "maximum": 180 },
+    "return_ride_needed": { "type": "boolean", "default": false },
+    "linked_return_request_id": { "type": "string" },
+
+    "passenger_count": { "type": "integer", "default": 1, "minimum": 1, "maximum": 8 },
+    "language_preference": { "type": "string", "default": "en" },
+    "assistance_level": { "type": "string", "enum": ["curb_to_curb", "door_to_door", "hand_to_hand"], "default": "curb_to_curb" },
+    "service_animal": { "type": "boolean", "default": false },
+
+    "contact_phone": { "type": "string", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "operational_notes": { "type": "string", "description": "Need-to-know only; shown to assigned personnel.", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+
+    "verification_code": { "type": "string", "description": "Rotating code shown to the rider before pickup. Regenerated on every reassignment and never reused.", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "verification_code_issued_at": { "type": "string", "format": "date-time" },
+
+    "fare_charged_cents": { "type": "integer", "default": 0, "maximum": 0, "description": "Structurally pinned to zero. There is no rider fare, booking fee, or required contribution." },
+
+    "eligibility_flags": { "type": "array", "items": { "type": "string" }, "description": "Deterministic reasons the request needs human review." },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "approved_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "canceled_at": { "type": "string", "format": "date-time" },
+    "retention_hold_active": { "type": "boolean", "default": false },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["rider_user_id", "status"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

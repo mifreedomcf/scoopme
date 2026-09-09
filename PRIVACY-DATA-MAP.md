@@ -21,6 +21,11 @@ their relationship to a ride requires, and stop showing it when the ride ends.
 | Background check vendor reference, status, category, dates | DriverCredential | Eligibility | Safety staff |
 | Incident narrative | SafetyIncident | Safeguarding | Safety staff and platform admins only |
 | Audit events | AuditLog | Accountability | Platform admins |
+| Vehicle make, model, colour, plate | Vehicle | So a rider can recognise the car | The matched rider before pickup; plate is field-secured otherwise |
+| Availability windows | DriverAvailability | Matching | The driver and staff |
+| Upload metadata and scan status | DriverCredential, IncidentAttachment | Deciding whether a file may be opened | Safety staff |
+| Check-in and escalation state | RideAssignment | Noticing a ride that has gone quiet | Dispatch and safety staff |
+| Delivery outcome and provider reference | Notification | Tracing whether a message actually arrived | Platform admins |
 
 ## What is never collected
 
@@ -67,6 +72,24 @@ Live location is disabled for the pilot and gated behind `privacy_security` and
 an active ride, shared only with the assigned driver, the rider, a verified
 guardian, an authorized scheduler where consent permits, and safety staff, via
 expiring unguessable tokens, and stops after completion.
+
+## The outage manifest
+
+`export-ride-manifest` deliberately assembles the most sensitive combination in
+the product — exact addresses, phone numbers, and verification codes for the
+day's confirmed rides — because a dispatcher working through an outage needs all
+three on paper. It is staff-only, needs a written purpose, is capped at 48 hours
+per pull, and writes an `export.sensitive` audit row. The response carries a
+handling notice telling the operator to keep it locked and shred it at the end
+of the day.
+
+## Automated watching
+
+`ride-checkin-sweep` reads ride timestamps every five minutes. It stores no new
+personal data: it writes an escalation level and a kind onto the assignment, an
+observation onto the ride timeline, and an alert to staff that names no address
+and no code. At urgent level it opens an incident so a person owns it — stating
+what was observed, explicitly not what happened.
 
 ## Retention and holds
 

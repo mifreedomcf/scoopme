@@ -1,0 +1,24 @@
+{
+  "name": "RideOffer",
+  "description": "A minimized offer shown to one eligible driver before acceptance: approximate pickup area, resource category, time window, passenger count, and required verified capabilities. Never contains an exact address or rider contact details.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "driver_profile_id": { "type": "string" },
+    "offer_kind": { "type": "string", "enum": ["broadcast", "direct_assignment"], "default": "broadcast" },
+    "pickup_area_label": { "type": "string" },
+    "destination_area_label": { "type": "string" },
+    "resource_category": { "type": "string" },
+    "window_start": { "type": "string", "format": "date-time" },
+    "window_end": { "type": "string", "format": "date-time" },
+    "passenger_count": { "type": "integer" },
+    "required_capabilities": { "type": "array", "items": { "type": "string" } },
+    "approx_distance_miles": { "type": "number" },
+    "status": { "type": "string", "enum": ["open", "claimed", "declined", "expired", "withdrawn"], "default": "open" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "responded_at": { "type": "string", "format": "date-time" },
+    "match_explanation": { "type": "array", "items": { "type": "string" }, "description": "Deterministic filters this driver passed. Matching is rule-based and explainable; no model decides eligibility." }
+  },
+  "required": ["ride_request_id", "driver_profile_id"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}

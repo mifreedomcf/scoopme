@@ -29,10 +29,22 @@ passes the filters; waitlist it and say so to the rider.
 **During rides.** Watch "In progress". A ride sitting in `en_route` past its
 window, or in `arrived_pickup` without moving, is worth a phone call.
 
-**Credentials.** The expiring-within-30-days list is on the same board. A driver
-whose document expires becomes ineligible on the expiry date automatically —
-their offers vanish and a claim in flight is refused. Call them before that, not
+**Credentials.** The expiring-within-30-days list is on the same board. The
+overnight sweep marks lapsed documents expired, recomputes eligibility,
+withdraws that driver's open offers, and queues them a notice thirty days ahead.
+None of that needs you. What needs you is a phone call before the date, not
 after.
+
+Verifying a document is a two-person job by design: you cannot verify your own,
+and you cannot verify a file that has not been scanned clean. While no scanner
+is configured, that means credential verification is blocked — which is correct,
+and is one of the launch-gate items.
+
+**Escalations.** Every five minutes the check-in timers look at live rides. An
+amber notice means a ride is past a threshold; an urgent alert reaches safety
+staff and opens an incident. Treat both as "phone the driver", not as a verdict.
+The timers read timestamps, not the road. A deliberate move by the driver clears
+the escalation; the timer never decides on its own that things look fine again.
 
 ## Incidents
 
@@ -52,11 +64,11 @@ after.
 
 The platform is not the only copy of the day's plan.
 
-**Before service each day**, print or export the manifest: for every confirmed
-ride, the rider name and phone, the pickup address, the destination, the window,
-the driver name and phone, the vehicle description and plate, and the
-verification code. Store it in the locked cabinet at the dispatch desk. It is a
-sensitive document — shred it at end of day.
+**Before service each day**, pull the manifest from the bottom of the Dispatch
+board. Give the range and write why you need it — your name, the time, and your
+reason are recorded, because this is the one export that puts home addresses,
+phone numbers, and verification codes on one page. Print it, store it in the
+locked cabinet at the dispatch desk, and shred it at end of day.
 
 **If the app is down:**
 

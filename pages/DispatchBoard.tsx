@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { base44, reviewRide } from "@/lib/api";
+import { base44, exportRideManifest, reviewRide, type ApiError } from "@/lib/api";
 import { Empty } from "@/components/Chrome";
 import { statusLabel, statusTone, windowLabel } from "@/lib/ride-display";
 
@@ -31,6 +31,8 @@ export default function DispatchBoard() {
   const [expiring, setExpiring] = useState<Credential[]>([]);
   const [note, setNote] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const [manifest, setManifest] = useState({ from: "", to: "", purpose: "" });
+  const [manifestRows, setManifestRows] = useState<number | null>(null);
 
   const load = async () => {
     const rows = (await base44.entities.RideRequest.list("-created_date", 200)) as Ride[];
@@ -59,6 +61,24 @@ export default function DispatchBoard() {
       setNote((e as Error).message);
     } finally {
       setBusy(null);
+    }
+  }
+
+  async function pullManifest() {
+    setNote(null);
+    setManifestRows(null);
+    try {
+      const r = await exportRideManifest(
+        new Date(manifest.from).toISOString(),
+        new Date(manifest.to).toISOString(),
+        manifest.purpose,
+      );
+      const res = r as { row_count: number; handling_notice: string };
+      setManifestRows(res.row_count);
+      setNote(res.handling_notice);
+    } catch (e) {
+      const err = e as ApiError;
+      setNote(err.fields?.map((f) => f.message).join(" ") ?? err.message);
     }
   }
 
@@ -127,6 +147,30 @@ export default function DispatchBoard() {
             <Link to={`/rides/${r.id}`}>Open</Link>
           </article>
         ))}
+      </section>
+
+      <section aria-labelledby="manifest">
+        <h2 id="manifest">Printable manifest, for when the app is down</h2>
+        <p className="meta">
+          This pulls home addresses, phone numbers, and ride verification codes for confirmed rides. Print
+          it before service, keep it locked, and shred it at the end of the day. Your name, the time, and
+          your reason are recorded.
+        </p>
+        <div className="field">
+          <label htmlFor="m-from">From</label>
+          <input id="m-from" type="datetime-local" value={manifest.from} onChange={(e) => setManifest({ ...manifest, from: e.target.value })} />
+        </div>
+        <div className="field">
+          <label htmlFor="m-to">Until</label>
+          <span className="hint">Up to 48 hours at a time.</span>
+          <input id="m-to" type="datetime-local" value={manifest.to} onChange={(e) => setManifest({ ...manifest, to: e.target.value })} />
+        </div>
+        <div className="field">
+          <label htmlFor="m-purpose">Why do you need it?</label>
+          <input id="m-purpose" value={manifest.purpose} onChange={(e) => setManifest({ ...manifest, purpose: e.target.value })} />
+        </div>
+        <button className="btn btn--secondary" onClick={pullManifest}>Pull the manifest</button>
+        {manifestRows !== null && <p role="status">{manifestRows} ride(s) in that range.</p>}
       </section>
 
       <section aria-labelledby="creds">

@@ -100,3 +100,39 @@ export const updateLaunchGate = (gateKey: string, changes: Record<string, unknow
 
 export const acceptLegalDocument = (legalDocumentId: string, roleContext: string) =>
   callFunction("accept-legal-document", { legal_document_id: legalDocumentId, role_context: roleContext });
+
+// ---- Milestone 2: driver operations and safety ----
+
+export const submitDriverCredential = (payload: Record<string, unknown>) =>
+  callFunction("submit-driver-credential", payload);
+
+export const reviewDriverCredential = (payload: Record<string, unknown>) =>
+  callFunction("review-driver-credential", payload);
+
+export const manageVehicle = (payload: Record<string, unknown>) => callFunction("manage-vehicle", payload);
+
+export const reviewVehicle = (payload: Record<string, unknown>) => callFunction("review-vehicle", payload);
+
+export const addAvailability = (startsAt: string, endsAt: string, notes?: string) =>
+  callFunction("manage-availability", { action: "add", starts_at: startsAt, ends_at: endsAt, notes });
+
+export const cancelAvailability = (availabilityId: string) =>
+  callFunction("manage-availability", { action: "cancel", availability_id: availabilityId });
+
+export const declineRideOffer = (offerId: string, reasonCode?: string) =>
+  callFunction("decline-ride-offer", { offer_id: offerId, reason_code: reasonCode });
+
+export const verifyRideIdentity = (rideRequestId: string, code: string) =>
+  callFunction("verify-ride-identity", { ride_request_id: rideRequestId, verification_code: code });
+
+export const reportSafetyIncident = (payload: Record<string, unknown>) =>
+  callFunction("report-safety-incident", payload);
+
+export const manageSafetyIncident = (payload: Record<string, unknown>) =>
+  callFunction("manage-safety-incident", payload);
+
+export const exportRideManifest = (from: string, to: string, purpose: string) =>
+  callFunction("export-ride-manifest", { from, to, purpose });
+
+export const resendNotification = (notificationId: string) =>
+  callFunction("dispatch-notifications", { notification_id: notificationId });

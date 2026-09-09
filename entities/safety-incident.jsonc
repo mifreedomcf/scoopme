@@ -1,0 +1,28 @@
+{
+  "name": "SafetyIncident",
+  "description": "Safety incident record. Restricted to safety staff and platform admins. Narratives never appear in ordinary reports, exports, or notifications. Opening an incident places the related ride under retention hold.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "reported_by_user_id": { "type": "string" },
+    "reporter_role": { "type": "string" },
+    "incident_type": {
+      "type": "string",
+      "enum": ["crash", "injury", "harassment", "discrimination", "suspected_abuse_neglect", "missing_rider", "vehicle_issue", "inappropriate_conduct", "failed_handoff", "other"]
+    },
+    "severity": { "type": "string", "enum": ["low", "moderate", "high", "critical"], "default": "moderate" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "narrative": { "type": "string", "description": "Restricted. Excluded from every report and export by default.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "immediate_actions_taken": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "emergency_services_contacted": { "type": "boolean", "default": false },
+    "mandated_report_filed": { "type": "boolean", "default": false, "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "status": { "type": "string", "enum": ["open", "under_review", "escalated", "resolved", "closed"], "default": "open" },
+    "assigned_to_email": { "type": "string", "format": "email" },
+    "retention_hold_id": { "type": "string" },
+    "source": { "type": "string", "enum": ["reported_by_person", "escalation_timer", "failed_handoff", "staff_opened"], "default": "reported_by_person", "description": "An automated timer can open an incident for a person to read. It never resolves or classifies one." },
+    "escalation_kind": { "type": "string" },
+    "resolved_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["incident_type", "occurred_at"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}

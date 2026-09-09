@@ -60,6 +60,7 @@ export function TabBar({ roles }: { roles: string[] }) {
       <NavLink to="/resources">Resources</NavLink>
       {has("volunteer_driver") && <NavLink to="/driver">Driving</NavLink>}
       {(has("dispatcher") || has("platform_admin")) && <NavLink to="/dispatch">Dispatch</NavLink>}
+      {(has("safety_staff") || has("platform_admin")) && <NavLink to="/safety">Safety</NavLink>}
       {has("platform_admin") && <NavLink to="/admin">Admin</NavLink>}
       <NavLink to="/policies">Policies</NavLink>
     </nav>

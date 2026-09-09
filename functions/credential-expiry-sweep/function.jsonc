@@ -1,0 +1,18 @@
+// Daily credential expiry and eligibility sweep.
+{
+  "name": "credential-expiry-sweep",
+  "entry": "entry.ts",
+  "automations": [
+    {
+      "type": "scheduled",
+      "name": "daily_credential_sweep",
+      "description": "Expires lapsed credentials, recomputes driver eligibility, and queues advance expiry notices.",
+      "is_active": true,
+
+      "schedule_mode": "recurring",
+      "schedule_type": "cron",
+      // 05:00 UTC is roughly midnight in Detroit, before the service day starts.
+      "cron_expression": "0 5 * * *"
+    }
+  ]
+}
