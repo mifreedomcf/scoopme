@@ -1,0 +1,265 @@
+/*
+  Scoop Me — visual system.
+
+  Direction: municipal transit signage. High-contrast wayfinding, wide colour
+  bands that carry status rather than decorate, one bold element (the route
+  strip) and quiet discipline everywhere else. Left-aligned throughout, because
+  people scan a schedule down the left edge.
+
+  Type is the system UI stack on purpose: zero webfont payload on an old phone
+  on a weak connection, and guaranteed legibility at large sizes.
+*/
+
+:root {
+  --ink: #14202b;
+  --ink-soft: #4a5b6b;
+  --paper: #ffffff;
+  --surface: #eef2f5;
+  --line: #cbd6de;
+
+  --signal: #0b5f8a;      /* primary action */
+  --signal-deep: #084965;
+  --marigold: #f0a202;    /* reserved: "free", draft warnings, current position */
+  --moss: #1b6b4c;        /* confirmed / complete */
+  --brick: #a32e22;       /* emergency / destructive */
+
+  --focus: #f0a202;
+
+  --step-0: 0.8125rem;
+  --step-1: 0.9375rem;
+  --step-2: 1.0625rem;
+  --step-3: 1.3125rem;
+  --step-4: 1.6875rem;
+  --step-5: 2.125rem;
+
+  --touch: 3.25rem;
+  --measure: 62ch;
+  --shell: 34rem;
+
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--step-2);
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--paper);
+}
+
+.pad { padding: 1.25rem 1.125rem 5.5rem; }
+
+h1, h2, h3 { line-height: 1.15; margin: 0 0 0.5rem; letter-spacing: -0.015em; }
+h1 { font-size: var(--step-5); font-weight: 800; }
+h2 { font-size: var(--step-4); font-weight: 800; }
+h3 { font-size: var(--step-3); font-weight: 700; }
+p  { margin: 0 0 1rem; max-width: var(--measure); }
+
+a { color: var(--signal-deep); }
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Masthead: the signage band ---------- */
+.masthead {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.875rem 1.125rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.masthead .wordmark { font-size: var(--step-3); font-weight: 800; letter-spacing: -0.02em; }
+.masthead .place { font-size: var(--step-0); color: #9db4c4; }
+
+/* ---------- Banners ---------- */
+.band {
+  padding: 0.75rem 1.125rem;
+  font-size: var(--step-1);
+  border-bottom: 1px solid var(--line);
+}
+.band--pilot { background: var(--surface); color: var(--ink); }
+.band--draft { background: var(--marigold); color: #2b1d00; font-weight: 700; }
+.band--stop  { background: var(--brick); color: var(--paper); font-weight: 700; }
+
+/* ---------- The free statement: the one loud moment ---------- */
+.free-rule {
+  border-top: 6px solid var(--marigold);
+  padding-top: 0.75rem;
+  margin: 1.5rem 0;
+}
+.free-rule strong { display: block; font-size: var(--step-4); font-weight: 800; }
+.free-rule span { color: var(--ink-soft); font-size: var(--step-1); }
+
+/* ---------- Route strip: the ride lifecycle as a transit line ---------- */
+.route { margin: 1.25rem 0 1.5rem; }
+.route ol { list-style: none; margin: 0; padding: 0; display: flex; gap: 3px; }
+.route li {
+  flex: 1;
+  height: 0.75rem;
+  background: var(--line);
+  border-radius: 1px;
+}
+.route li[data-done="true"] { background: var(--signal); }
+.route li[data-current="true"] { background: var(--marigold); }
+.route .route-label {
+  margin-top: 0.5rem;
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+.route .route-sub { font-size: var(--step-0); color: var(--ink-soft); }
+@media (prefers-reduced-motion: no-preference) {
+  .route li { transition: background-color 240ms ease; }
+}
+
+/* ---------- Forms ---------- */
+.field { margin: 0 0 1.25rem; }
+.field label { display: block; font-weight: 700; font-size: var(--step-1); margin-bottom: 0.25rem; }
+.field .hint { display: block; color: var(--ink-soft); font-size: var(--step-0); margin-bottom: 0.375rem; }
+input, select, textarea {
+  width: 100%;
+  min-height: var(--touch);
+  padding: 0.625rem 0.75rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--line);
+  border-radius: 2px;
+}
+textarea { min-height: 6rem; }
+input[type="checkbox"], input[type="radio"] { width: 1.5rem; min-height: 1.5rem; }
+.check { display: flex; gap: 0.75rem; align-items: flex-start; min-height: var(--touch); }
+.check label { font-weight: 400; }
+
+.error-summary {
+  border: 3px solid var(--brick);
+  padding: 0.875rem 1rem;
+  margin: 0 0 1.25rem;
+}
+.error-summary h3 { color: var(--brick); font-size: var(--step-2); }
+.error-summary ul { margin: 0; padding-left: 1.125rem; }
+.field-error { color: var(--brick); font-size: var(--step-1); font-weight: 700; margin-top: 0.25rem; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch);
+  padding: 0.5rem 1.25rem;
+  font: inherit;
+  font-weight: 700;
+  border-radius: 2px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn--primary { background: var(--signal); color: var(--paper); }
+.btn--primary:hover { background: var(--signal-deep); }
+.btn--secondary { background: var(--paper); color: var(--signal-deep); border-color: var(--signal); }
+.btn--danger { background: var(--brick); color: var(--paper); }
+.btn--block { width: 100%; }
+.btn[disabled] { background: var(--line); color: #5a6b78; cursor: not-allowed; border-color: var(--line); }
+
+.actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+
+/* ---------- Records ---------- */
+.record {
+  border-top: 2px solid var(--ink);
+  padding: 0.875rem 0 1.125rem;
+}
+.record + .record { border-top-width: 1px; border-top-color: var(--line); }
+.record .meta { font-size: var(--step-0); color: var(--ink-soft); }
+.record h3 { margin-bottom: 0.125rem; }
+
+.status {
+  display: inline-block;
+  font-size: var(--step-0);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  padding: 0.125rem 0.5rem;
+  border: 2px solid currentColor;
+}
+.status--wait { color: var(--ink-soft); }
+.status--go { color: var(--moss); }
+.status--stop { color: var(--brick); }
+.status--live { color: var(--signal); }
+
+.empty {
+  border: 2px dashed var(--line);
+  padding: 1.5rem 1.25rem;
+  text-align: left;
+}
+.empty h3 { margin-bottom: 0.25rem; }
+
+/* ---------- Emergency ---------- */
+.emergency {
+  border: 3px solid var(--brick);
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+.emergency .btn--danger { width: 100%; margin-bottom: 0.625rem; }
+
+/* ---------- Nav ---------- */
+.tabbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  background: var(--ink);
+  border-top: 3px solid var(--marigold);
+}
+.tabbar a {
+  flex: 1;
+  min-height: var(--touch);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cddce6;
+  text-decoration: none;
+  font-size: var(--step-0);
+  font-weight: 700;
+  padding: 0.5rem 0.25rem;
+  text-align: center;
+}
+.tabbar a[aria-current="page"] { color: var(--paper); background: var(--signal-deep); }
+
+.skip {
+  position: absolute; left: -9999px;
+}
+.skip:focus { left: 0.5rem; top: 0.5rem; z-index: 10; background: var(--marigold); color: var(--ink); padding: 0.5rem 0.75rem; }
+
+.footnote { font-size: var(--step-0); color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 1rem; margin-top: 2rem; }
+
+.doc { max-width: var(--measure); }
+.doc h2 { margin-top: 1.75rem; font-size: var(--step-3); }
+.doc blockquote {
+  margin: 0 0 1.25rem;
+  padding: 0.875rem 1rem;
+  background: var(--marigold);
+  color: #2b1d00;
+  border-left: 6px solid #2b1d00;
+  font-weight: 700;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #101a22; --surface: #0a1218; --ink: #eaf1f6; --ink-soft: #9fb3c1; --line: #2c3d4a; --signal: #4aa8d8; --signal-deep: #7cc4e8; }
+  .band--draft { color: #2b1d00; }
+  .masthead { background: #060d12; }
+}
