@@ -1,0 +1,19 @@
+// Notification delivery worker.
+{
+  "name": "dispatch-notifications",
+  "entry": "entry.ts",
+  "automations": [
+    {
+      "type": "scheduled",
+      "name": "notification_delivery",
+      "description": "Delivers queued notifications with deduplication, backoff, and a redaction check on every body.",
+      "function_args": { "batch_limit": 200 },
+      "is_active": true,
+
+      "schedule_mode": "recurring",
+      "schedule_type": "simple",
+      "repeat_unit": "minutes",
+      "repeat_interval": 5
+    }
+  ]
+}

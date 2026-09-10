@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { base44, updateConfig, updateLaunchGate, type AppConfig } from "@/lib/api";
 
 interface Gate {
@@ -73,6 +74,11 @@ export default function AdminSettings({ config, reload }: { config: AppConfig | 
     <main id="main" className="pad">
       <h1>Admin settings</h1>
       {note && <p role="status" className="field-error">{note}</p>}
+
+      <nav aria-label="Admin pages" className="actions">
+        <Link className="btn btn--secondary" to="/reports">Numbers and exports</Link>
+        <Link className="btn btn--secondary" to="/safety">Safety incidents</Link>
+      </nav>
 
       <section aria-labelledby="identity">
         <h2 id="identity">Who runs this service</h2>

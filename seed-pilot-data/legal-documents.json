@@ -1,0 +1,168 @@
+[
+  {
+    "document_key": "terms_of_use",
+    "version": "0.1-draft",
+    "title": "Terms of Use",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## What this service is\nScoop Me coordinates free, scheduled rides between community members who need transportation and screened volunteer drivers, so people can reach food, supplies, social services, education programs, and non-emergency appointments.\n\n## What this service is not\nThis is not an emergency service, an ambulance, a medical transport service, or a taxi. If someone is in danger or needs urgent medical help, call 911. Scoop Me does not guarantee that a ride will be available, that a driver will be matched, or that any ride will arrive at a particular time.\n\n## Cost\nRiders are never charged. There is no fare, booking fee, subscription, surge price, or required contribution. Whether a person donates, volunteers, or supplies goods has no effect on their eligibility, priority, matching, service quality, or access.\n\n## Who operates it\nThe operator is named in the app's settings. No partner organization, individual, or resource site is the operator, carrier, insurer, employer, agent, or guarantor unless that is stated in a signed agreement.\n\n## Your account\nGive accurate information, keep your sign-in details to yourself, and tell us if you think someone else is using your account.\n\n## Suspension\nAccess can be suspended where there is a safety concern, a credential lapses, or these terms are broken.\n\n## Changes\nWhen these terms change, you will be asked to review and accept the new version before continuing."
+  },
+  {
+    "document_key": "privacy_notice",
+    "version": "0.1-draft",
+    "title": "Privacy Notice",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## What is collected\nContact details, the addresses of a trip, the times and category of a trip, accommodations needed, and the records needed to screen volunteer drivers.\n\n## What is deliberately not collected\nNo diagnosis, treatment detail, immigration status, Social Security number, or payment card number. Trips are recorded by category, never by medical purpose.\n\n## Who can see what\nA volunteer driver sees only an approximate pickup area, the resource category, a time window, the number of passengers, and the verified capabilities a ride needs \u2014 until they are assigned. Exact addresses and contact details are released only after assignment and only close to the pickup time. Access to those details is logged.\n\n## Notifications\nNotifications use generic labels. An exact address, a verification code, or a sensitive destination never appears in an email subject, an SMS, or a lock-screen preview.\n\n## Keeping and deleting data\nRecords are kept for a published retention period and then deleted or anonymized, except where a legal, audit, insurance, tax, safeguarding, or incident hold applies.\n\n## Your choices\nYou can ask for a copy of your data, ask for a correction, withdraw a consent, and ask for deletion, subject to lawful retention. Contact details are in the app."
+  },
+  {
+    "document_key": "location_data_notice",
+    "version": "0.1-draft",
+    "title": "Location Data Notice",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## When location is collected\nPrecise location is collected only during an active ride, only for the minimum window needed to complete it, and only after the required consent. Live location is turned off entirely during this pilot.\n\n## Who it is shared with\nThe assigned driver, the rider, a verified guardian where one applies, an authorized organization scheduler where consent permits, and safety staff.\n\n## How access ends\nTracking links expire, use unguessable tokens, are rate-limited, and stop showing exact location once the ride ends. Every access to precise location is logged.\n\n## Turning it off\nYou can decline location sharing. Declining may mean a ride cannot be coordinated in the way you wanted, but it never affects your eligibility for a ride."
+  },
+  {
+    "document_key": "adult_rider_agreement",
+    "version": "0.1-draft",
+    "title": "Adult Rider Agreement and Informed Consent",
+    "applies_to_roles": [
+      "adult_rider"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## What you are agreeing to\nYou are asking a screened volunteer \u2014 not a professional chauffeur or a medical transport crew \u2014 to drive you to a community resource on a scheduled trip.\n\n## What we do\nWe check volunteer drivers against the screening standards published in the driver standards page, we verify vehicles and accommodations, and we keep a record of every ride.\n\n## What we cannot promise\nWe cannot promise a driver will be available, that a trip will be on time, or that a resource will be open or have supplies when you arrive.\n\n## What we ask of you\nBe at the pickup point at the agreed time, check the driver photo, the vehicle, and the plate before getting in, share your verification code with the driver, and tell us straight away if anything feels wrong.\n\n## Cost\nNothing. There is no fare and no expected tip. You are never asked to pay, donate, volunteer, or bring anything.\n\n## Risk\nRoad travel carries risk. This agreement describes how the program works and what it does and does not cover. It does not waive rights you have under Michigan law, and signing it is not the only safety control in this program."
+  },
+  {
+    "document_key": "guardian_agreement_minor_authorization",
+    "version": "0.1-draft",
+    "title": "Guardian Agreement and Minor Transportation Authorization",
+    "applies_to_roles": [
+      "guardian"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Not available in this pilot\nRides for people under 18 are switched off. This document exists so counsel can review it before that ever changes.\n\n## Who may consent\nOnly a verified parent, legal guardian, or another adult with documented legal authority. A teacher, doctor, case manager, coach, or nonprofit staff member may help coordinate a ride, but their professional relationship does not make them a guardian and never substitutes for this consent.\n\n## What consent covers\nA named child, a named ride or a time-limited standing arrangement, the named adults authorized to hand the child over and receive them, and permission to seek emergency help.\n\n## Pickup and drop-off\nEach authorized adult is recorded by name, phone number, and relationship, with a rotating handoff code that is never reused. A child is never left unattended. If a handoff cannot be completed, the driver follows the safety protocol and does not choose a new destination.\n\n## Communication\nThere is no private channel between a driver and a child. Messages route through the guardian and the platform, with contact details masked and access logged.\n\n## Withdrawing consent\nYou can withdraw consent at any time. A withdrawn consent stops any ride that has not started."
+  },
+  {
+    "document_key": "volunteer_driver_agreement",
+    "version": "0.1-draft",
+    "title": "Volunteer Driver Agreement",
+    "applies_to_roles": [
+      "volunteer_driver"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## You are a volunteer\nYou are not an employee, contractor, partner, or agent of the operator. Nothing here promises work, hours, income, or continued participation.\n\n## No guaranteed tips\nTips are switched off in this pilot. If tipping is ever enabled after legal, tax, insurance, payment-processor, and worker-classification review, it will be optional for the rider, never preselected, never requested by you, and never available before a ride is complete. Nothing guarantees you will receive one.\n\n## Screening and credentials\nYou agree to identity verification, a motor-vehicle-record check, a criminal background check, a National Sex Offender Registry check, and re-checks at least annually. Your eligibility pauses automatically the moment any required licence, insurance, inspection, or check expires.\n\n## Your vehicle and insurance\nYou must hold current registration and personal auto insurance meeting the requirements published by the operator, and you must confirm your insurer's position on volunteer community driving.\n\n## Conduct\nZero tolerance for drugs and alcohol. No discrimination. No off-platform contact with riders. No private contact with a minor. You are a mandated reporter under the training you accepted.\n\n## Ending participation\nEither side can end this arrangement at any time."
+  },
+  {
+    "document_key": "organization_participation_agreement",
+    "version": "0.1-draft",
+    "title": "Organization Participation and Scheduling Agreement",
+    "applies_to_roles": [
+      "org_scheduler",
+      "org_admin"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## What your organization may do\nApproved schedulers may request rides for enrolled participants who have authorized your organization to do so, and may see the status of those rides.\n\n## Authorization is not consent\nA participant's authorization lets you request a ride. It is not guardian consent, and it never covers a person under 18. A scheduler may never sign as a parent or legal guardian.\n\n## Data\nYou will see only your own participants. Reports are scoped to your organization and suppress small cells. Do not export or reuse participant data for any other purpose.\n\n## Contributions\nYour organization may pledge volunteer hours or supplies. Pledges are voluntary. No participant is ever required to work or contribute in exchange for their own ride, and an unfulfilled pledge never creates a debt, a penalty, or a restriction on anyone's rides.\n\n## Ending participation\nEither side can end this arrangement at any time."
+  },
+  {
+    "document_key": "nondiscrimination_accommodation_policy",
+    "version": "0.1-draft",
+    "title": "Nondiscrimination and Reasonable Accommodation Policy",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Equal access\nRides are offered without regard to race, color, national origin, religion, sex, sexual orientation, gender identity, age, disability, familial status, source of income, or any other protected characteristic.\n\n## Accommodations\nTell us what you need \u2014 a wheelchair lift, securement, door-to-door assistance, a language, a service animal, extra time \u2014 and we match you only with a driver and vehicle whose capability for that need has been verified.\n\n## Service animals\nService animals are welcome. A driver who has not accepted service animals is simply not matched to that ride.\n\n## If something goes wrong\nReport it through the app or the support line. Discrimination reports are handled as safety incidents."
+  },
+  {
+    "document_key": "zero_tolerance_drug_alcohol_policy",
+    "version": "0.1-draft",
+    "title": "Zero-Tolerance Drug and Alcohol Policy",
+    "applies_to_roles": [
+      "volunteer_driver"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## The rule\nNo driver may drive for this program while under the influence of alcohol, cannabis, an illegal drug, or any substance that impairs driving, including a prescribed or over-the-counter medicine that carries a driving warning.\n\n## Reporting\nAnyone may report a concern. Reports can be made anonymously.\n\n## What happens\nA report immediately suspends the driver's eligibility while it is reviewed. A confirmed violation ends participation.\n\n## Testing\nAny testing program will be described here once it has been reviewed by counsel."
+  },
+  {
+    "document_key": "child_safeguarding_policy",
+    "version": "0.1-draft",
+    "title": "Child Safeguarding and Prohibited Conduct Policy",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Not active in this pilot\nRides for minors are switched off. This policy is drafted for review before that could change.\n\n## Prohibited conduct\nNo private contact between a driver and a child. No unscheduled stops. No photographs of a child. No gifts. No requests for secrecy. No contact outside the platform.\n\n## Two-adult and handoff rules\nA child is handed over only to a recorded authorized adult presenting a valid rotating code. A child is never left unattended and a driver never chooses a substitute destination.\n\n## Mandated reporting\nEvery approved driver and staff member completes mandated-reporter training and reports suspected abuse or neglect to the appropriate Michigan authority, in addition to reporting it here.\n\n## Screening\nTransporting a minor requires a separate, higher credential tier, including fingerprinting and child-abuse and neglect registry screening where required."
+  },
+  {
+    "document_key": "pickup_dropoff_failed_handoff_policy",
+    "version": "0.1-draft",
+    "title": "Pickup, Drop-off and Failed Handoff Policy",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Verification before the trip\nBefore a rider gets in, they check the driver's photo, the vehicle make, model, color, and plate, and share a rotating verification code. A driver who cannot verify the rider does not start the trip.\n\n## Waiting\nA driver waits the published wait time at the pickup point and tries the contact number before reporting a no-show. There is no penalty and no charge for a no-show.\n\n## Failed handoff\nIf a drop-off cannot be completed safely, the driver stops, contacts the safety team, stays with the rider, and follows the safety protocol. The driver does not choose a new destination and does not leave the rider alone.\n\n## Escalation\nA failed handoff opens a safety incident, places the ride record under hold, and alerts staff. Automated alerts assist people; they never make the final call."
+  },
+  {
+    "document_key": "emergency_response_protocols",
+    "version": "0.1-draft",
+    "title": "Accident, Injury, Abuse, Missing Rider and Emergency Response Protocols",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Emergencies come first\nCall 911 for any medical emergency, crash with injury, fire, or immediate danger. This app does not replace emergency services and never delays a 911 call.\n\n## After the immediate danger\nContact the safety team through the app or the safety line. File an incident report with what happened, when, and who was there.\n\n## Crash\nEnsure safety, call 911 if anyone is hurt, exchange insurance details, photograph the scene if safe, then file an incident report.\n\n## Suspected abuse or neglect\nReport to the appropriate Michigan authority as a mandated reporter, and file an incident report here. Do not investigate.\n\n## Missing rider\nCall the safety line immediately and stay where you are. Staff coordinate with the rider's emergency contact and, where appropriate, the police.\n\n## Records\nIncident records are preserved under hold and cannot be deleted while the hold is active."
+  },
+  {
+    "document_key": "cancellation_no_show_policy",
+    "version": "0.1-draft",
+    "title": "Cancellation and No-Show Policy",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Riders\nCancel any time, for any reason, at no cost. Cancelling does not affect your access to future rides. There is no fee, no strike, and no penalty.\n\n## Repeated no-shows\nIf several rides in a row go unused, a coordinator will get in touch to see whether the schedule or the pickup point needs changing. The goal is to make the ride work, not to remove access.\n\n## Drivers\nRelease a ride as early as you can so it can be re-offered. Releasing after a rider is expecting you triggers a coordinator follow-up.\n\n## The operator\nA ride may be canceled where a credential lapses, a safety concern arises, or weather makes travel unsafe."
+  },
+  {
+    "document_key": "donation_tip_contribution_disclosures",
+    "version": "0.1-draft",
+    "title": "Donation, Tip and Non-Cash Contribution Disclosures",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Rides are free\nThere is never a rider fare, booking fee, subscription, surge price, or required contribution.\n\n## Donations\nDonations to the platform are switched off in this pilot. If they are ever enabled, they will be voluntary, separate from ride requests, processed through a hosted payment page that stores no card data, and they will have no effect on anyone's access to a ride. No statement about tax deductibility will be made until the legal recipient and required disclosures are configured and approved.\n\n## Driver tips\nDirect driver tips are switched off. If they are ever enabled after legal, tax, insurance, payment-processor, worker-classification and TNC-status review, a tip will be optional, rider-selected, never preselected, never requested, and unavailable until a ride is complete, with \"No tip\" shown just as prominently.\n\n**Tips may be taxable even if you do not receive a tax form. Consult a tax professional.** No dollar amount is described here as tax-free, and no promise is made about which tax form, if any, will be issued.\n\n## Non-cash support\nAn organization may pledge volunteer hours or supplies. No participant is ever required to work or contribute in exchange for their own ride, and an unfulfilled pledge creates no debt, penalty, or ride restriction."
+  },
+  {
+    "document_key": "data_retention_incident_hold_breach_policy",
+    "version": "0.1-draft",
+    "title": "Data Retention, Incident Hold and Breach Response Policy",
+    "applies_to_roles": [
+      "all"
+    ],
+    "review_status": "draft_requires_review",
+    "published": true,
+    "body_markdown": "> **DRAFT \u2014 REQUIRES LEGAL/INSURANCE APPROVAL.** This text was drafted as a starting point for counsel and the operator's insurer. It has not been reviewed or approved by an attorney, and it is not legal advice. Do not publish it, rely on it, or present it to riders, guardians, drivers, or partners as final.\n\n## Retention\nEach record type has a retention period configured in admin settings. A scheduled job deletes or anonymizes records past their period.\n\n## Holds\nA legal, audit, insurance, tax, safeguarding, or incident hold stops that job and blocks ordinary deletion for the records it covers, until the hold is released by an authorized administrator.\n\n## Access logging\nAccess to minor records, precise location, credential records, incident records, and sensitive exports is logged with who, when, and why.\n\n## Breach response\nA suspected breach is triaged within the timeframe in the incident runbook, contained, assessed for notification duties under Michigan and federal law, and reported to affected people and regulators as required.\n\n## Your requests\nRequests for export, correction, consent withdrawal, or deletion are handled within the published timeframe, subject to lawful retention."
+  }
+]

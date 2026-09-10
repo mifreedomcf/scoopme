@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { claimRide, listDriverOffers } from "@/lib/api";
+import { Link } from "react-router-dom";
+import { claimRide, declineRideOffer, listDriverOffers } from "@/lib/api";
 import { Empty } from "@/components/Chrome";
 import { RESOURCE_CATEGORY_LABELS, windowLabel } from "@/lib/ride-display";
 
@@ -47,9 +48,27 @@ export default function DriverHome() {
     }
   }
 
+  async function decline(offerId: string) {
+    setBusy(offerId);
+    try {
+      await declineRideOffer(offerId);
+      await load();
+    } catch (e) {
+      setNote((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
   return (
     <main id="main" className="pad">
       <h1>Rides you can take</h1>
+
+      <nav aria-label="Driver pages" className="actions">
+        <Link className="btn btn--secondary" to="/driver/credentials">My documents</Link>
+        <Link className="btn btn--secondary" to="/driver/car">My car</Link>
+        <Link className="btn btn--secondary" to="/driver/times">When I can drive</Link>
+      </nav>
       <p className="meta">
         You see the neighbourhood, the kind of place, and the time window. The exact address and the
         rider&apos;s phone number unlock after you take the ride, close to the pickup time.
@@ -59,6 +78,13 @@ export default function DriverHome() {
       {offers === null && <p>Loading…</p>}
       {offers?.length === 0 && (
         <Empty title="Nothing open right now" body="New rides appear here when a coordinator approves them and your credentials cover what the rider needs." />
+      )}
+
+      {offers && offers.length > 0 && (
+        <p className="meta">
+          Declining costs you nothing and is not held against you. It just tells the coordinator to look
+          elsewhere.
+        </p>
       )}
 
       {offers?.map((o) => (
@@ -77,6 +103,9 @@ export default function DriverHome() {
           <div className="actions">
             <button className="btn btn--primary" onClick={() => claim(o.ride_request_id)} disabled={busy === o.ride_request_id}>
               {busy === o.ride_request_id ? "Taking…" : "Take this ride"}
+            </button>
+            <button className="btn btn--secondary" onClick={() => decline(o.offer_id)} disabled={busy === o.offer_id}>
+              Not this one
             </button>
           </div>
         </article>

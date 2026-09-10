@@ -9,6 +9,16 @@ import RequestWizard from "@/pages/RequestWizard";
 import RideDetail from "@/pages/RideDetail";
 import DriverApply from "@/pages/DriverApply";
 import DriverHome from "@/pages/DriverHome";
+import DriverCredentials from "@/pages/DriverCredentials";
+import DriverVehicles from "@/pages/DriverVehicles";
+import DriverAvailability from "@/pages/DriverAvailability";
+import DriverActiveRide from "@/pages/DriverActiveRide";
+import IncidentReport from "@/pages/IncidentReport";
+import IncidentCenter from "@/pages/IncidentCenter";
+import OrgDashboard from "@/pages/OrgDashboard";
+import MyAuthorizations from "@/pages/MyAuthorizations";
+import Contributions from "@/pages/Contributions";
+import Reports from "@/pages/Reports";
 import DispatchBoard from "@/pages/DispatchBoard";
 import AdminSettings from "@/pages/AdminSettings";
 import Resources from "@/pages/Resources";
@@ -50,6 +60,16 @@ export default function App() {
         <Route path="/rides/:rideId" element={<RideDetail config={config} />} />
         <Route path="/driver" element={<DriverHome />} />
         <Route path="/driver/apply" element={<DriverApply config={config} />} />
+        <Route path="/driver/credentials" element={<DriverCredentials />} />
+        <Route path="/driver/car" element={<DriverVehicles />} />
+        <Route path="/driver/times" element={<DriverAvailability />} />
+        <Route path="/driver/rides/:rideId" element={<DriverActiveRide config={config} />} />
+        <Route path="/incident/new" element={<IncidentReport config={config} />} />
+        <Route path="/safety" element={<IncidentCenter />} />
+        <Route path="/org" element={<OrgDashboard config={config} />} />
+        <Route path="/org/contributions" element={<Contributions config={config} />} />
+        <Route path="/permissions" element={<MyAuthorizations />} />
+        <Route path="/reports" element={<Reports />} />
         <Route path="/dispatch" element={<DispatchBoard />} />
         <Route path="/admin" element={<AdminSettings config={config} reload={reload} />} />
         <Route path="/resources" element={<Resources />} />
