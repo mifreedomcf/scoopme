@@ -1,0 +1,24 @@
+{
+  "name": "LegalAcceptance",
+  "description": "Records one person accepting one document version. Immutable. Acceptance of an older version does not satisfy a newer published version.",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "user_email": { "type": "string", "format": "email" },
+    "legal_document_id": { "type": "string" },
+    "document_key": { "type": "string" },
+    "document_version": { "type": "string" },
+    "role_context": { "type": "string" },
+    "accepted_at": { "type": "string", "format": "date-time" },
+    "user_agent": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "request_ip": { "type": "string", "description": "Truncated to /24 where lawful.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "revoked_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["user_id", "legal_document_id", "document_key", "document_version", "accepted_at"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

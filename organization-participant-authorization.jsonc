@@ -1,0 +1,20 @@
+{
+  "name": "OrganizationParticipantAuthorization",
+  "description": "Records that a specific participant authorized a specific organization to request rides on their behalf. A professional relationship alone is NOT authorization, and this record is NEVER guardian consent for a minor — see ConsentRecord (Milestone 4).",
+  "type": "object",
+  "properties": {
+    "organization_id": { "type": "string" },
+    "participant_user_id": { "type": "string" },
+    "participant_rider_profile_id": { "type": "string" },
+    "authorization_type": { "type": "string", "enum": ["participant_signed", "participant_verbal_recorded", "documented_legal_authority"], "description": "documented_legal_authority requires a verified document reference and is still not guardian consent." },
+    "scope": { "type": "string", "enum": ["request_rides_only", "request_and_receive_status"], "default": "request_rides_only" },
+    "status": { "type": "string", "enum": ["pending", "active", "expired", "revoked"], "default": "pending" },
+    "verified_by_email": { "type": "string", "format": "email" },
+    "verified_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "document_reference": { "type": "string", "description": "Private storage reference. Never a public URL.", "rls": { "read": { "user_condition": { "role": "admin" } } } }
+  },
+  "required": ["organization_id", "participant_user_id", "authorization_type"],
+  "rls": { "create": false, "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] }, "update": false, "delete": false }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "ContributionPledge",
+  "description": "A voluntary offer of hours or goods from an organization. There is deliberately no balance, debt, or credit field: an unfulfilled pledge produces a status and nothing else. No field on this entity is read by matching, eligibility, or any ride decision.",
+  "type": "object",
+  "properties": {
+    "organization_id": { "type": "string" },
+    "catalog_item_id": { "type": "string" },
+    "pledged_by_user_id": { "type": "string" },
+    "pledged_by_email": { "type": "string", "format": "email" },
+    "kind": { "type": "string", "enum": ["volunteer_hours", "supplies", "equipment", "space", "services"] },
+    "quantity": { "type": "number", "minimum": 0 },
+    "unit_label": { "type": "string" },
+    "note": { "type": "string", "description": "Free text from the organization. Server rejects wording that ties the pledge to anyone's ride access." },
+    "starts_on": { "type": "string", "format": "date" },
+    "ends_on": { "type": "string", "format": "date" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "submitted", "accepted", "declined", "withdrawn", "fulfilled", "partially_fulfilled", "lapsed"],
+      "default": "submitted",
+      "description": "lapsed means a window closed short. It carries no consequence for anyone."
+    },
+    "decided_by_email": { "type": "string", "format": "email", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "decided_at": { "type": "string", "format": "date-time", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "decline_reason": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "acknowledged_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["organization_id", "catalog_item_id", "quantity"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

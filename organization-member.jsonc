@@ -1,0 +1,16 @@
+{
+  "name": "OrganizationMember",
+  "description": "Links a user to an organization with a scoped role. Approved by a platform admin; an org admin may propose schedulers but cannot self-approve privileged access.",
+  "type": "object",
+  "properties": {
+    "organization_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "user_email": { "type": "string", "format": "email" },
+    "org_role": { "type": "string", "enum": ["scheduler", "org_admin"], "default": "scheduler" },
+    "status": { "type": "string", "enum": ["requested", "approved", "suspended", "revoked"], "default": "requested" },
+    "approved_by_email": { "type": "string", "format": "email" },
+    "approved_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["organization_id", "user_id", "user_email", "org_role"],
+  "rls": { "create": false, "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] }, "update": false, "delete": false }
+}

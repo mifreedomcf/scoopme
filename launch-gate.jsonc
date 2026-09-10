@@ -1,0 +1,26 @@
+{
+  "name": "LaunchGate",
+  "description": "Admin compliance launch checklist. Feature flags refuse to enable unless their required gates are complete and unexpired. Rows are created by seed-pilot-data and only ever changed through admin-update-launch-gate.",
+  "type": "object",
+  "properties": {
+    "gate_key": { "type": "string", "description": "Stable machine key, e.g. 'lara_determination'." },
+    "category": {
+      "type": "string",
+      "enum": ["regulatory", "insurance", "driver_auto_policy", "legal_documents", "background_checks", "mvr_monitoring", "child_safeguarding", "child_restraint", "payments_tax", "privacy_security", "support_coverage", "partner_mou"],
+      "description": "Checklist category from the compliance gate specification."
+    },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "gates_flags": { "type": "array", "items": { "type": "string" }, "description": "SystemConfig flags this gate blocks, e.g. ['ride_fulfillment_enabled']." },
+    "status": { "type": "string", "enum": ["not_started", "in_progress", "blocked", "complete"], "default": "not_started" },
+    "owner_email": { "type": "string", "format": "email" },
+    "evidence_url": { "type": "string", "format": "uri", "description": "Link to the signed policy, binder, MOU, or determination letter." },
+    "reviewer_email": { "type": "string", "format": "email", "description": "Authorized reviewer. Must differ from the person marking it complete where segregation is required." },
+    "approved_date": { "type": "string", "format": "date" },
+    "expires_date": { "type": "string", "format": "date", "description": "An expired gate is treated as incomplete." },
+    "notes": { "type": "string" },
+    "is_mandatory": { "type": "boolean", "default": true, "description": "Mandatory gates can never be bypassed by emergency override." }
+  },
+  "required": ["gate_key", "category", "title"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}

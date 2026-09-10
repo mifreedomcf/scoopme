@@ -1,0 +1,56 @@
+{
+  "name": "DriverApplication",
+  "description": "Multi-step volunteer driver application with autosave. Applicants may read and edit only their own draft. Decisions are made by an authorized reviewer through a backend function; drivers can never self-approve.",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "applicant_email": { "type": "string", "format": "email" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "submitted", "documents_pending", "checks_pending", "under_review", "approved", "declined", "withdrawn"],
+      "default": "draft"
+    },
+    "current_step": { "type": "integer", "default": 1, "minimum": 1, "maximum": 8 },
+    "steps_completed": { "type": "array", "items": { "type": "string" }, "default": [] },
+
+    "legal_first_name": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "legal_last_name": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "date_of_birth": { "type": "string", "format": "date", "description": "Used only for the age gate.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "phone": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "identity_verification_status": { "type": "string", "enum": ["not_started", "pending", "verified", "failed"], "default": "not_started", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+
+    "license_number_last4": { "type": "string", "maxLength": 4, "description": "Last four digits only. The full number is never stored.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "license_issuing_state": { "type": "string" },
+    "license_expiration": { "type": "string", "format": "date" },
+
+    "service_availability_notes": { "type": "string" },
+    "detroit_service_confirmed": { "type": "boolean", "default": false },
+
+    "applying_for_minor_transport": { "type": "boolean", "default": false, "description": "Requires the separate minor_transport_approved credential tier; general approval never suffices." },
+
+    "policy_zero_tolerance_accepted": { "type": "boolean", "default": false },
+    "policy_nondiscrimination_accepted": { "type": "boolean", "default": false },
+    "training_safe_driving_ack": { "type": "boolean", "default": false },
+    "training_boundaries_ack": { "type": "boolean", "default": false },
+    "training_mandated_reporting_ack": { "type": "boolean", "default": false },
+    "training_incident_response_ack": { "type": "boolean", "default": false },
+    "training_rider_assistance_ack": { "type": "boolean", "default": false },
+    "training_privacy_ack": { "type": "boolean", "default": false },
+    "training_minor_handoff_ack": { "type": "boolean", "default": false, "description": "Required only for the minor-transport tier." },
+
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "decision": { "type": "string", "enum": ["pending", "approved", "declined"], "default": "pending", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "decision_reason_category": { "type": "string", "description": "Category only, never the underlying report contents.", "rls": { "read": { "user_condition": { "role": "admin" } }, "write": { "user_condition": { "role": "admin" } } } },
+    "decision_by_email": { "type": "string", "format": "email", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "decision_at": { "type": "string", "format": "date-time", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "appeal_status": { "type": "string", "enum": ["none", "requested", "under_review", "upheld", "overturned"], "default": "none", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["user_id", "applicant_email"],
+  "rls": {
+    "create": { "user_condition": { "id": "{{user.id}}" } },
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": { "$and": [{ "created_by": "{{user.email}}" }, { "data.status": { "$in": ["draft", "documents_pending"] } }] },
+    "delete": false
+  }
+}

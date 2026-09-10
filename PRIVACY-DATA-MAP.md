@@ -21,6 +21,14 @@ their relationship to a ride requires, and stop showing it when the ride ends.
 | Background check vendor reference, status, category, dates | DriverCredential | Eligibility | Safety staff |
 | Incident narrative | SafetyIncident | Safeguarding | Safety staff and platform admins only |
 | Audit events | AuditLog | Accountability | Platform admins |
+| Vehicle make, model, colour, plate | Vehicle | So a rider can recognise the car | The matched rider before pickup; plate is field-secured otherwise |
+| Availability windows | DriverAvailability | Matching | The driver and staff |
+| Upload metadata and scan status | DriverCredential, IncidentAttachment | Deciding whether a file may be opened | Safety staff |
+| Check-in and escalation state | RideAssignment | Noticing a ride that has gone quiet | Dispatch and safety staff |
+| Delivery outcome and provider reference | Notification | Tracing whether a message actually arrived | Platform admins |
+| Participant authorization | OrganizationParticipantAuthorization | Proving a person said yes to an organization booking for them | The participant, that organization, and staff |
+| Pledges and fulfillment | ContributionPledge, ContributionFulfillment | Tracking what an organization offered and what arrived | That organization and platform admins |
+| Straight-line trip miles, volunteer minutes | RideRequest | Volunteer-hour and mileage reporting | Staff; aggregated only for everyone else |
 
 ## What is never collected
 
@@ -67,6 +75,57 @@ Live location is disabled for the pilot and gated behind `privacy_security` and
 an active ride, shared only with the assigned driver, the rider, a verified
 guardian, an authorized scheduler where consent permits, and safety staff, via
 expiring unguessable tokens, and stops after completion.
+
+## The outage manifest
+
+`export-ride-manifest` deliberately assembles the most sensitive combination in
+the product — exact addresses, phone numbers, and verification codes for the
+day's confirmed rides — because a dispatcher working through an outage needs all
+three on paper. It is staff-only, needs a written purpose, is capped at 48 hours
+per pull, and writes an `export.sensitive` audit row. The response carries a
+handling notice telling the operator to keep it locked and shred it at the end
+of the day.
+
+## Automated watching
+
+`ride-checkin-sweep` reads ride timestamps every five minutes. It stores no new
+personal data: it writes an escalation level and a kind onto the assignment, an
+observation onto the ride timeline, and an alert to staff that names no address
+and no code. At urgent level it opens an incident so a person owns it — stating
+what was observed, explicitly not what happened.
+
+## Reports
+
+`build-report` is the only reporting endpoint, and it derives its scope from the
+caller's role rather than from what the caller asks for. An organization gets
+its own participants; a partner gets its own destinations; staff get everything.
+Scoping is applied before anything is counted, so a filter cannot be dropped on
+the way out.
+
+Any cell built from fewer than five distinct people is written as `suppressed`,
+including in CSV — never as a zero, so a reader can tell "none" from "too few to
+show". Staff see real numbers. Under-18 rides are excluded from every audience
+except staff. The fact set copied into a report carries no address, coordinate,
+phone number, verification code, operational note, or incident narrative, and a
+test asserts those field names are absent from the projection.
+
+A CSV export needs a written purpose of at least fifteen characters and writes
+an `export.sensitive` audit row with the purpose, the scope, and the row count.
+
+## Participant authorization
+
+An organization can only request rides for someone who has confirmed it
+themselves, in their own account. `request-participant-authorization` creates a
+`pending` record and has no code path that activates one — it never calls
+`update` on the record it just made. Only
+`confirm-participant-authorization` can activate it, and only when the caller is
+the participant. There is no staff override.
+
+Being someone's case manager, teacher, coach, or doctor is not authorization.
+For anyone under 18 the route is closed outright, because guardian consent is a
+different thing and lives in Milestone 4. Authorizations expire after a year and
+the person is asked again. Withdrawing one never cancels a booked ride silently:
+a coordinator is told so the rider is not left waiting.
 
 ## Retention and holds
 

@@ -1,0 +1,30 @@
+{
+  "name": "LegalDocument",
+  "description": "A versioned legal or policy document. Every Milestone 1 version ships as an unapproved DRAFT and renders a visible review banner. The app requires acceptance of the current published version of the documents that apply to a person's role.",
+  "type": "object",
+  "properties": {
+    "document_key": {
+      "type": "string",
+      "enum": [
+        "terms_of_use", "privacy_notice", "location_data_notice", "adult_rider_agreement",
+        "guardian_agreement_minor_authorization", "volunteer_driver_agreement",
+        "organization_participation_agreement", "nondiscrimination_accommodation_policy",
+        "zero_tolerance_drug_alcohol_policy", "child_safeguarding_policy", "pickup_dropoff_failed_handoff_policy",
+        "emergency_response_protocols", "cancellation_no_show_policy",
+        "donation_tip_contribution_disclosures", "data_retention_incident_hold_breach_policy"
+      ]
+    },
+    "version": { "type": "string", "description": "e.g. '0.1-draft'." },
+    "title": { "type": "string" },
+    "body_markdown": { "type": "string" },
+    "applies_to_roles": { "type": "array", "items": { "type": "string" } },
+    "review_status": { "type": "string", "enum": ["draft_requires_review", "in_legal_review", "attorney_approved"], "default": "draft_requires_review" },
+    "reviewed_by": { "type": "string", "description": "Name/firm of the reviewing attorney or insurer. Blank while unreviewed." },
+    "reviewed_at": { "type": "string", "format": "date-time" },
+    "published": { "type": "boolean", "default": false },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "superseded_by_id": { "type": "string" }
+  },
+  "required": ["document_key", "version", "title"],
+  "rls": { "create": false, "read": true, "update": false, "delete": false }
+}

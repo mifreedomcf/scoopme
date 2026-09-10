@@ -59,15 +59,46 @@ unrelated to the record.
 
 **Rate limiting.** Ride submission is limited per requester per rolling 24 hours
 via `isRateLimited()`, configurable through `ride_request_rate_limit_per_day`.
-Notifications are deduplicated by `idempotency_key`. Milestone 7 extends this to
-authentication, driver claims, consent links, tracking links, messages,
-donations, and incident submissions.
+Identity-code attempts are capped per ride. Notification delivery is
+deduplicated by `idempotency_key`, capped per recipient per hour, and backs off
+exponentially over at most five attempts before giving up. Milestone 7 extends
+rate limiting to authentication, consent links, and tracking links.
 
-**File uploads.** Credential documents and incident attachments are stored as
-private storage references (`UploadPrivateFile`), never as public URLs. A signed
-URL is minted per access request and that access is audited.
-`IncidentAttachment.scan_status` starts at `pending`; the malware-scanning
-adapter lands in Milestone 2, and an unscanned attachment is not served.
+**Notification content.** Every body is re-checked against the actual ride
+record by `assertNotificationSafe()` immediately before dispatch, not only at
+render time. A body that contains an address, phone number, or verification code
+is marked `failed` with `redaction_check_failed` and audited rather than sent, so
+a future template edit cannot start leaking ride detail.
+
+**Sensitive export.** `export-ride-manifest` is the one endpoint that returns
+addresses, phone numbers, and verification codes together, because a dispatcher
+with no working app needs all three on paper. It requires a staff role, a written
+purpose of at least fifteen characters, and a range of at most 48 hours, and it
+writes an `export.sensitive` audit row carrying the purpose, the range, and the
+row count.
+
+**File uploads.** Credential documents, vehicle photos, and incident attachments
+are stored as private storage references, never as public URLs — a value
+starting `http://` or `https://` is rejected outright in
+`submit-driver-credential`, `manage-vehicle`, and `attach-incident-evidence`.
+`validateUpload()` enforces a per-purpose size ceiling and content-type
+allowlist, rejects path traversal and control characters in the filename,
+rejects a second extension (`scan.pdf.exe`), and rejects a file whose declared
+type disagrees with its extension.
+
+The malware-scanning adapter is defined but no scanner is configured, so
+`unavailableScanner` returns `unavailable`, which maps to `pending`.
+`mayServeAttachment()` returns true only for `clean`, and
+`review-driver-credential` refuses to verify a credential whose document has not
+been scanned clean. The absence of a scanner never reads as a clean result.
+
+**Identity verification at pickup.** The rider's rotating six-character code is
+never sent to the driver's device — `minimizeRide()` withholds it from every
+driver projection, including the assigned driver inside the reveal window. The
+driver types what the rider says aloud and the server compares it with
+`safeEqual()`. Wrong guesses are capped at five per ride per fifteen minutes,
+each attempt is written to `RideEvent` and `AuditLog`, and the failure message
+never echoes or hints at the expected value.
 
 **Secrets.** Only in Base44 project secrets, read with `secrets.get()` from
 `base44:runtime` inside functions. No key is ever sent to the client. The
@@ -100,9 +131,10 @@ Denied attempts are audited too, with `outcome: "denied"` and a reason code.
 
 MFA and step-up authentication for administrators and safety staff, session and
 device revocation, admin re-authentication enforced server-side rather than
-asserted by the client, the malware-scanning adapter, CSP and security headers on
-the hosted site, and a dependency and secret-scanning pipeline. All are Milestone
-7 and are listed as open dependencies in the milestone report.
+asserted by the client, a live malware scanner behind the adapter, CSP and
+security headers on the hosted site, and a dependency and secret-scanning
+pipeline. All are Milestone 7 and are listed as open dependencies in the
+milestone report.
 
 ## Reporting a vulnerability
 

@@ -10,9 +10,11 @@ no effect on eligibility, priority, matching, service quality, or access. That i
 enforced in the data model (`RideRequest.fare_charged_cents` has `maximum: 0`) and
 in the request allowlist, not only in copy.
 
-This repository is **Milestone 1: closed adult pilot foundation**. Ride fulfilment
-is switched off and cannot be switched on until the compliance launch gate is
-complete. See `LEGAL-INSURANCE-LAUNCH-GATES.md`.
+This repository covers **Milestone 1 (closed adult pilot foundation)**,
+**Milestone 2 (driver operations and safety)** and **Milestone 3 (organization
+scheduling and community support)**. Ride fulfilment is switched off
+and cannot be switched on until the compliance launch gate is complete. See
+`LEGAL-INSURANCE-LAUNCH-GATES.md`.
 
 ---
 
@@ -29,6 +31,12 @@ complete. See `LEGAL-INSURANCE-LAUNCH-GATES.md`.
   geocoder are configured, every request is flagged for a dispatcher.
 - Background checks run in `mock_pending_review`. The mock never returns a
   passing result, so no driver can be approved through it.
+- No malware scanner is configured, so every uploaded document and every piece
+  of incident evidence stays `pending` and is never served. A credential with an
+  unscanned document cannot be verified. That is the intended behaviour.
+- No notification provider is configured, so messages are marked
+  `suppressed_provider_missing` rather than `sent`. Nothing reports a delivery
+  that did not happen.
 - The pilot partner listing has a name and a ZIP and nothing else. Address,
   hours, contact, pickup instructions, inventory notes, and public description
   are deliberately blank for an administrator to fill in from the partner.
@@ -39,11 +47,12 @@ complete. See `LEGAL-INSURANCE-LAUNCH-GATES.md`.
 base44/
   config.jsonc              project config (entities, functions, site)
   auth/config.jsonc         login methods
-  entities/*.jsonc          29 entity schemas with row- and field-level security
+  entities/*.jsonc          32 entity schemas with row- and field-level security
   shared/*.ts               pure decision logic + one SDK seam (runtime.ts)
-  functions/<name>/entry.ts 14 Deno serverless functions
-src/                        React + Vite frontend
-tests/                      90 Vitest tests over the decision logic and schemas
+  functions/<name>/entry.ts 36 Deno serverless functions
+  functions/*/function.jsonc  3 scheduled automations
+src/                        React + Vite frontend, 22 screens
+tests/                      198 Vitest tests over the decision logic and schemas
 ```
 
 **Base44 services used:** managed entity database with RLS/FLS, Deno backend
@@ -78,6 +87,49 @@ the single module that touches the SDK.
 | `accept-legal-document` | Records acceptance of a specific published version. |
 | `list-driver-offers` | Minimized open offers. Returns nothing to an ineligible driver. |
 | `seed-pilot-data` | Idempotent seeding. Leaves unknown partner details blank. |
+
+### Milestone 2
+
+| Function | What it decides |
+|---|---|
+| `submit-driver-credential` | Driver uploads a document. Validates it, clears any prior verification, recomputes eligibility. |
+| `review-driver-credential` | Reviewer verifies or rejects. Blocks self-review and unscanned documents. |
+| `manage-vehicle` | Vehicle details and declared accommodations, recorded as unverified. |
+| `review-vehicle` | Staff verify the vehicle and each accommodation separately. |
+| `manage-availability` | Availability windows, with overlap and committed-ride checks. |
+| `decline-ride-offer` | Driver declines; returns the ride to the coordinator when the last offer goes. |
+| `verify-ride-identity` | Driver types the rider's spoken code. Rate limited, audited, never echoes the code. |
+| `report-safety-incident` | Opens an incident, sets a retention hold, freezes the ride, alerts safety staff. |
+| `manage-safety-incident` | Staff work an incident. Releasing a hold is separate, justified, admin-only. |
+| `attach-incident-evidence` | Private evidence reference, held `pending` until scanned. |
+| `credential-expiry-sweep` | Daily: expires lapsed documents, recomputes eligibility, withdraws offers, warns ahead. |
+| `ride-checkin-sweep` | Every 5 min: overdue and silence timers. Raises flags for people; decides nothing. |
+| `dispatch-notifications` | Delivery worker: dedupe, backoff, per-recipient limits, redaction check on every body. |
+| `export-ride-manifest` | The outage fallback. Staff only, written purpose, bounded range, audited. |
+
+### Milestone 3
+
+| Function | What it decides |
+|---|---|
+| `request-participant-authorization` | An organization asks a participant. Creates a pending record and nothing more. Closed outright for under-18s. |
+| `confirm-participant-authorization` | Only the participant confirms, declines, or withdraws. No staff override exists. |
+| `manage-organization-member` | An org admin proposes a scheduler; only a platform admin approves one. |
+| `manage-contribution-catalog` | The operator's list of things that would actually help. |
+| `submit-contribution-pledge` | An organization offers hours or goods. Refuses wording tied to anyone's ride. |
+| `review-contribution-pledge` | Accept or decline. Says out loud that access is unaffected either way. |
+| `record-contribution-fulfillment` | What actually arrived, and staff verification. Outstanding is floored at zero. |
+| `build-report` | The one reporting endpoint. Scope from role, suppression for everyone but staff, CSV audited. |
+
+### Scheduled automations
+
+Configured in `function.jsonc` next to each function and deployed atomically
+with it.
+
+| Automation | Schedule |
+|---|---|
+| `daily_credential_sweep` | cron `0 5 * * *` |
+| `ride_checkin_watch` | simple, every 5 minutes |
+| `notification_delivery` | simple, every 5 minutes |
 
 ## Getting started
 
@@ -134,9 +186,9 @@ connection. Touch targets are 52px, focus is always visible, motion respects
 
 ## What is not built yet
 
-Milestones 2–7: credential automation and expiry jobs, organization scheduling
-UI, the guardian/minor workflow (architected, flag-disabled), maps and consented
-live tracking, donations and the tip ledger, and production hardening.
+Milestones 4–7: the guardian/minor workflow (architected, flag-disabled), maps
+and consented live tracking, donations and the tip ledger, and production
+hardening.
 
 ## Related documents
 

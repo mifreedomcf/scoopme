@@ -1,0 +1,29 @@
+{
+  "name": "Vehicle",
+  "description": "A vehicle a driver may use. Plate and vehicle description are revealed to a matched rider before pickup so the rider can verify the car; they are not published to anyone else.",
+  "type": "object",
+  "properties": {
+    "driver_profile_id": { "type": "string" },
+    "make": { "type": "string" },
+    "model": { "type": "string" },
+    "year": { "type": "integer", "minimum": 1980 },
+    "color": { "type": "string" },
+    "license_plate": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "plate_state": { "type": "string", "default": "MI" },
+    "seating_capacity": { "type": "integer", "minimum": 1, "maximum": 15 },
+    "photo_references": { "type": "array", "items": { "type": "string" }, "description": "Private storage references." },
+    "photo_scan_status": { "type": "string", "enum": ["not_applicable", "pending", "clean", "flagged"], "default": "not_applicable" },
+    "inspection_required": { "type": "boolean", "default": false, "description": "Computed server-side from vehicle age vs SystemConfig.vehicle_inspection_age_years." },
+    "inspection_status": { "type": "string", "enum": ["not_required", "not_started", "pending", "passed", "failed", "expired"], "default": "not_required", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "inspection_expiration": { "type": "string", "format": "date" },
+    "status": { "type": "string", "enum": ["draft", "pending_review", "active", "retired", "suspended"], "default": "draft", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["driver_profile_id"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}
