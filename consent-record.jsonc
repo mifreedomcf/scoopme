@@ -1,0 +1,38 @@
+{
+  "name": "ConsentRecord",
+  "description": "A guardian's agreement to a specific trip, or a time-limited standing arrangement, on a specific version of the wording. Immutable once signed: a change means a new record, not an edit. Consenting to an older version never satisfies a newer one.",
+  "type": "object",
+  "properties": {
+    "dependent_profile_id": { "type": "string" },
+    "ride_request_id": { "type": "string", "description": "Required for a single-trip consent. Blank for a standing arrangement." },
+    "guardian_relationship_id": { "type": "string", "description": "The verified authority relied on at signing time." },
+    "scope": { "type": "string", "enum": ["single_ride", "standing"], "default": "single_ride", "description": "standing is only offered once counsel has approved its wording." },
+    "status": { "type": "string", "enum": ["requested", "signed", "revoked", "expired", "superseded"], "default": "requested" },
+
+    "legal_document_id": { "type": "string" },
+    "document_key": { "type": "string" },
+    "document_version": { "type": "string", "description": "The exact version signed. Checked against the current published version on every trip." },
+    "consent_text_snapshot": { "type": "string", "description": "The wording as it stood at signing, stored so nobody has to reconstruct it later.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+
+    "signer_user_id": { "type": "string" },
+    "signer_email": { "type": "string", "format": "email", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "signer_relationship": { "type": "string" },
+    "signed_at": { "type": "string", "format": "date-time" },
+    "request_ip": { "type": "string", "description": "Truncated to /24, recorded only where lawful.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "user_agent": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+
+    "emergency_authorization_given": { "type": "boolean", "default": false, "description": "Permission to seek emergency help for the child during the trip." },
+    "starts_on": { "type": "string", "format": "date" },
+    "expires_on": { "type": "string", "format": "date", "description": "Mandatory for a standing arrangement. There is no open-ended consent." },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "revoked_by_user_id": { "type": "string" },
+    "superseded_by_id": { "type": "string" }
+  },
+  "required": ["dependent_profile_id", "scope", "document_key", "document_version"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "GuardianRelationship",
+  "description": "Records that a specific adult has verified legal authority to decide for a specific child. Authority is separate from consent: holding this record does not mean any particular trip has been agreed to. Verification is always a human act against a document, recorded with who, when, and what expires.",
+  "type": "object",
+  "properties": {
+    "guardian_user_id": { "type": "string" },
+    "guardian_email": { "type": "string", "format": "email" },
+    "dependent_profile_id": { "type": "string" },
+    "authority_type": {
+      "type": "string",
+      "enum": ["parent", "legal_guardian", "court_appointed_custodian", "documented_delegated_authority"],
+      "description": "documented_delegated_authority still requires a verified document. A professional relationship is never an authority type."
+    },
+    "relationship_label": { "type": "string", "description": "How the adult describes it, e.g. 'mother', 'grandfather'." },
+    "status": { "type": "string", "enum": ["unverified", "pending_review", "verified", "rejected", "expired", "revoked"], "default": "unverified", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "document_reference": { "type": "string", "description": "Private storage file_uri for the proof of authority. Never a public URL, and never the document's contents.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "document_scan_status": { "type": "string", "enum": ["not_applicable", "pending", "clean", "flagged"], "default": "not_applicable" },
+    "verified_by_email": { "type": "string", "format": "email", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "verified_at": { "type": "string", "format": "date-time", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "expires_on": { "type": "string", "format": "date", "description": "Re-verification date. An expired authority cannot consent to anything." },
+    "rejected_reason_category": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["guardian_user_id", "dependent_profile_id", "authority_type"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

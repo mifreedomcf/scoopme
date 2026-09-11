@@ -1,0 +1,25 @@
+{
+  "name": "RelaySession",
+  "description": "A masked calling or texting session between two people on one ride, through a proxy number. Neither party learns the other's real number. Sessions expire with the trip. Created only when a relay provider is configured; there is no fallback that quietly exposes a real number.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "provider_name": { "type": "string" },
+    "provider_session_id": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "proxy_number": { "type": "string", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "participant_a_user_id": { "type": "string" },
+    "participant_b_user_id": { "type": "string" },
+    "channel": { "type": "string", "enum": ["voice", "sms", "both"], "default": "both" },
+    "opened_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "closed_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["ride_request_id", "participant_a_user_id", "participant_b_user_id", "expires_at"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

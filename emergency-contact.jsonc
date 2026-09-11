@@ -1,0 +1,22 @@
+{
+  "name": "EmergencyContact",
+  "description": "Emergency contact for a rider or driver. Visible to the owner and to safety staff only. Never exposed to unassigned drivers or in notifications.",
+  "type": "object",
+  "properties": {
+    "owner_user_id": { "type": "string" },
+    "owner_kind": { "type": "string", "enum": ["rider", "driver", "dependent"] },
+    "name": { "type": "string" },
+    "relationship": { "type": "string" },
+    "phone": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "is_primary": { "type": "boolean", "default": true },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["owner_user_id", "owner_kind", "name", "phone"],
+  "rls": {
+    "create": { "user_condition": { "id": "{{user.id}}" } },
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "RiderProfile",
+  "description": "Adult rider details used for matching and pickup. Home address is stored only as a saved place with a coarse public form; exact address is revealed to a driver only after assignment and inside the reveal window.",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "display_name": { "type": "string" },
+    "phone": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "mobility_needs": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["none", "wheelchair_lift", "wheelchair_securement", "walker", "cane", "door_to_door_assist", "arm_to_arm_assist", "service_animal", "vision_assist", "hearing_assist"] },
+      "default": ["none"]
+    },
+    "assistance_level": { "type": "string", "enum": ["curb_to_curb", "door_to_door", "hand_to_hand"], "default": "curb_to_curb" },
+    "language_preference": { "type": "string", "default": "en" },
+    "saved_pickup_label": { "type": "string", "description": "Rider-facing nickname, e.g. 'Home'." },
+    "saved_pickup_address": { "type": "string", "description": "Exact street address.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "saved_pickup_zip": { "type": "string" },
+    "saved_pickup_area_label": { "type": "string", "description": "Coarse neighborhood label shown to unassigned drivers." },
+    "notes_for_dispatch": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["user_id"],
+  "rls": {
+    "create": { "user_condition": { "id": "{{user.id}}" } },
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": false
+  }
+}

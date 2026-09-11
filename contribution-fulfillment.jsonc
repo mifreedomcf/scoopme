@@ -1,0 +1,30 @@
+{
+  "name": "ContributionFulfillment",
+  "description": "Evidence that part or all of a pledge actually arrived. Evidence is a private storage reference, never a public URL, and is not served until scanned. Verification is a staff act.",
+  "type": "object",
+  "properties": {
+    "pledge_id": { "type": "string" },
+    "organization_id": { "type": "string" },
+    "quantity": { "type": "number", "minimum": 0 },
+    "unit_label": { "type": "string" },
+    "occurred_on": { "type": "string", "format": "date" },
+    "recorded_by_user_id": { "type": "string" },
+    "recorded_by_email": { "type": "string", "format": "email" },
+    "description": { "type": "string" },
+    "evidence_reference": { "type": "string", "description": "Private storage file_uri. Never a public URL.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "evidence_content_type": { "type": "string" },
+    "evidence_scan_status": { "type": "string", "enum": ["not_applicable", "pending", "clean", "flagged"], "default": "not_applicable" },
+    "verified": { "type": "boolean", "default": false, "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "verified_by_email": { "type": "string", "format": "email", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "verified_at": { "type": "string", "format": "date-time", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "estimated_value_cents": { "type": "integer", "minimum": 0, "description": "Operator's own bookkeeping estimate. Never presented to the organization as a tax-deductible amount." },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["pledge_id", "organization_id", "quantity", "occurred_on"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

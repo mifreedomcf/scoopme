@@ -1,0 +1,17 @@
+{
+  "name": "ContributionCatalogItem",
+  "description": "Something the operator has asked organizations for: volunteer hours, supplies, equipment, space, or services. A target quantity is a request, never an obligation, and nothing here is connected to any rider's access.",
+  "type": "object",
+  "properties": {
+    "kind": { "type": "string", "enum": ["volunteer_hours", "supplies", "equipment", "space", "services"] },
+    "title": { "type": "string" },
+    "description": { "type": "string", "description": "What is actually needed and why, in plain words." },
+    "unit_label": { "type": "string", "description": "e.g. 'hours', 'cases of water', 'booster seats'." },
+    "target_quantity": { "type": "number", "description": "What the operator would like. Not an amount anyone owes." },
+    "active": { "type": "boolean", "default": true },
+    "display_order": { "type": "integer", "default": 100 },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["kind", "title", "unit_label"],
+  "rls": { "create": false, "read": true, "update": false, "delete": false }
+}

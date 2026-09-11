@@ -1,0 +1,18 @@
+{
+  "name": "LocationEvent",
+  "description": "One precise point during an active ride. The shortest-lived record in the system: swept after seven days by default. Coordinates carry field-level security, are never included in any report, export, or notification, and stop being served precisely the moment the ride ends.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "tracking_session_id": { "type": "string" },
+    "recorded_by_user_id": { "type": "string", "description": "The assigned driver. No other source is accepted." },
+    "latitude": { "type": "number", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "longitude": { "type": "number", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "accuracy_meters": { "type": "number" },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "ride_status_at_capture": { "type": "string" },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["ride_request_id", "recorded_at"],
+  "rls": { "create": false, "read": { "user_condition": { "role": "admin" } }, "update": false, "delete": false }
+}

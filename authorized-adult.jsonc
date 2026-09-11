@@ -1,0 +1,24 @@
+{
+  "name": "AuthorizedAdult",
+  "description": "An adult a guardian has named as permitted to hand over or receive a specific child. Kept separate from the guardian record because the two are not the same thing: being allowed to collect a child is not authority to decide for them. Details are released only to the assigned driver, close to the trip.",
+  "type": "object",
+  "properties": {
+    "dependent_profile_id": { "type": "string" },
+    "added_by_guardian_user_id": { "type": "string" },
+    "name": { "type": "string", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "relationship": { "type": "string" },
+    "phone": { "type": "string", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "role": { "type": "string", "enum": ["pickup", "dropoff", "both"], "default": "both" },
+    "photo_reference": { "type": "string", "description": "Optional, private storage only, and only where the guardian approved it.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "photo_scan_status": { "type": "string", "enum": ["not_applicable", "pending", "clean", "flagged"], "default": "not_applicable" },
+    "active": { "type": "boolean", "default": true },
+    "deactivated_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["dependent_profile_id", "name", "relationship", "phone"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

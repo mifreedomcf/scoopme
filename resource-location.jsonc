@@ -1,0 +1,30 @@
+{
+  "name": "ResourceLocation",
+  "description": "A physical destination operated by a ResourcePartner. Address, hours, pickup instructions and inventory notes are admin-editable and intentionally blank until confirmed with the partner.",
+  "type": "object",
+  "properties": {
+    "partner_id": { "type": "string" },
+    "name": { "type": "string" },
+    "resource_categories": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["food_pantry", "free_fridge", "mutual_aid_supplies", "clothing", "social_services", "education_program", "workforce", "non_emergency_appointment", "community_event", "other"] },
+      "description": "Category only. The platform never records a diagnosis or the medical purpose of a trip."
+    },
+    "street_address": { "type": "string", "description": "ADMIN-EDITABLE. Left blank in seed data — do not guess a partner address." },
+    "city": { "type": "string", "default": "Detroit" },
+    "state": { "type": "string", "default": "MI" },
+    "zip_code": { "type": "string" },
+    "latitude": { "type": "number" },
+    "longitude": { "type": "number" },
+    "geocode_status": { "type": "string", "enum": ["not_geocoded", "geocoded", "failed", "manual"], "default": "not_geocoded" },
+    "operating_hours_text": { "type": "string", "description": "ADMIN-EDITABLE. Blank until confirmed with the partner." },
+    "pickup_instructions": { "type": "string", "description": "ADMIN-EDITABLE. Blank until confirmed." },
+    "inventory_notes": { "type": "string", "description": "ADMIN-EDITABLE. Blank until confirmed." },
+    "accessibility_notes": { "type": "string" },
+    "is_pilot_destination": { "type": "boolean", "default": false },
+    "status": { "type": "string", "enum": ["draft", "published", "paused"], "default": "draft" },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["partner_id", "name"],
+  "rls": { "create": false, "read": true, "update": false, "delete": false }
+}

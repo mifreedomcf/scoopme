@@ -1,0 +1,28 @@
+{
+  "name": "TrackingSession",
+  "description": "The consented window during which precise location may be collected for one ride. Records who agreed, which audiences they agreed to, and when it stopped. Without a live session with unrevoked consent, no point is ever accepted.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "granted_by_user_id": { "type": "string", "description": "The rider, or the verified guardian for a child. Never staff, never the driver." },
+    "granted_at": { "type": "string", "format": "date-time" },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "audiences": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["rider", "guardian", "org_scheduler", "assigned_driver", "safety_staff", "dispatcher"] },
+      "description": "Exactly who the grantor agreed to. An organization scheduler is opt-in and never assumed."
+    },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" },
+    "last_ping_at": { "type": "string", "format": "date-time" },
+    "ping_count": { "type": "integer", "default": 0 },
+    "consent_document_version": { "type": "string", "description": "The version of the location notice that was shown when this was agreed." }
+  },
+  "required": ["ride_request_id", "granted_by_user_id", "granted_at"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

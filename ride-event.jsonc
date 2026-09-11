@@ -1,0 +1,18 @@
+{
+  "name": "RideEvent",
+  "description": "Immutable ride timeline. One row per state transition or safety event, with actor, reason code, and timestamp. Never updated or deleted, including by admins.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "event_type": { "type": "string", "enum": ["transition", "offer_sent", "offer_declined", "code_rotated", "check_in", "escalation", "note", "outage_manual_entry"] },
+    "from_state": { "type": "string" },
+    "to_state": { "type": "string" },
+    "actor_user_id": { "type": "string" },
+    "actor_role": { "type": "string" },
+    "reason_code": { "type": "string" },
+    "note": { "type": "string", "description": "Operational note only. Incident narratives live in SafetyIncident." },
+    "occurred_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["ride_request_id", "event_type", "occurred_at"],
+  "rls": { "create": false, "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] }, "update": false, "delete": false }
+}

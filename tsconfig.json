@@ -20,5 +20,5 @@
   "include": ["src", "tests", "base44/shared", "vite.config.ts"],
   // runtime.ts is Deno code: it uses npm: specifiers and is type-checked by the
   // Base44 deploy pipeline, not by the browser tsconfig.
-  "exclude": ["base44/functions", "base44/shared/runtime.ts", "node_modules", "dist"]
+  "exclude": ["base44/functions", "base44/shared/runtime.ts", "base44/shared/minor-runtime.ts", "node_modules", "dist"]
 }

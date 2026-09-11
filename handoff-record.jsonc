@@ -1,0 +1,28 @@
+{
+  "name": "HandoffRecord",
+  "description": "One pickup or drop-off of a child, and the rotating PIN that authorised it. A PIN is never reused for the same child, is never shown to the driver, and is marked used the moment it works. Every failed attempt is counted here.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "dependent_profile_id": { "type": "string" },
+    "role": { "type": "string", "enum": ["pickup", "dropoff"] },
+    "expected_adult_ids": { "type": "array", "items": { "type": "string" }, "description": "AuthorizedAdult ids expected for this leg." },
+    "pin": { "type": "string", "description": "Rotating code, shown only to the authorized adult. Never included in any driver projection, notification, or export other than the outage manifest.", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "pin_issued_at": { "type": "string", "format": "date-time" },
+    "pin_used_at": { "type": "string", "format": "date-time" },
+    "failed_attempts": { "type": "integer", "default": 0, "minimum": 0 },
+    "verified_adult_id": { "type": "string" },
+    "verified_at": { "type": "string", "format": "date-time" },
+    "outcome": { "type": "string", "enum": ["pending", "verified", "failed", "abandoned"], "default": "pending" },
+    "failure_reason_code": { "type": "string" },
+    "safety_incident_id": { "type": "string", "description": "Set when a failed handoff escalates." },
+    "anonymized_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["ride_request_id", "dependent_profile_id", "role", "pin", "pin_issued_at"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

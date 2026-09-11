@@ -1,0 +1,18 @@
+{
+  "name": "RideNeed",
+  "description": "One accommodation a ride requires. The matcher treats every row as a hard filter against verified driver and vehicle capabilities.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "need": {
+      "type": "string",
+      "enum": ["wheelchair_lift", "wheelchair_securement", "booster_seat", "forward_facing_car_seat", "rear_facing_car_seat", "service_animal", "cdl_required", "cpr_certified", "first_aid_certified", "language", "door_to_door_assist", "hand_to_hand_handoff", "extra_space"]
+    },
+    "detail": { "type": "string", "description": "e.g. an ISO language code for a language need." },
+    "quantity": { "type": "integer", "default": 1, "minimum": 1 },
+    "is_hard_requirement": { "type": "boolean", "default": true },
+    "fulfilled": { "type": "boolean", "default": false }
+  },
+  "required": ["ride_request_id", "need"],
+  "rls": { "create": false, "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] }, "update": false, "delete": false }
+}

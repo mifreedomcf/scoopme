@@ -1,0 +1,25 @@
+{
+  "name": "MessageThread",
+  "description": "A supervised conversation. A thread about a child's ride must include the verified guardian and must never include the child or put a driver and a child together. Membership is re-checked on every post, so a thread cannot become unsafe by someone being added later.",
+  "type": "object",
+  "properties": {
+    "kind": { "type": "string", "enum": ["adult_ride", "minor_ride", "support", "organization"] },
+    "ride_request_id": { "type": "string" },
+    "dependent_profile_id": { "type": "string" },
+    "subject": { "type": "string", "description": "Generic label only. Never a destination, an address, or a reason for travel." },
+    "participant_user_ids": { "type": "array", "items": { "type": "string" } },
+    "participant_roles": { "type": "array", "items": { "type": "string" }, "description": "Parallel to participant_user_ids, so membership rules can be checked without extra lookups." },
+    "inactive_participant_user_ids": { "type": "array", "items": { "type": "string" }, "default": [], "description": "Removed participants keep history but cannot read or post." },
+    "locked": { "type": "boolean", "default": false },
+    "lock_reason": { "type": "string" },
+    "last_message_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["kind", "participant_user_ids"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

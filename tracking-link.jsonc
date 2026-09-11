@@ -1,0 +1,26 @@
+{
+  "name": "TrackingLink",
+  "description": "An unguessable, expiring token granting one audience a view of one ride's location. Tokens are never reused, are rate limited per minute, and every read is written to AuditLog. An expired or revoked token returns nothing, not a stale point.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "tracking_session_id": { "type": "string" },
+    "token": { "type": "string", "description": "256 bits of randomness. Never guessable, never derived from an id.", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "audience": { "type": "string", "enum": ["rider", "guardian", "org_scheduler", "assigned_driver", "safety_staff", "dispatcher"] },
+    "issued_to_user_id": { "type": "string" },
+    "issued_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "read_count": { "type": "integer", "default": 0 },
+    "last_read_at": { "type": "string", "format": "date-time" },
+    "reads_window_started_at": { "type": "string", "format": "date-time" },
+    "reads_in_window": { "type": "integer", "default": 0 }
+  },
+  "required": ["ride_request_id", "token", "audience", "issued_at", "expires_at"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}
