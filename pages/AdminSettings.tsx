@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { base44, updateConfig, updateLaunchGate, type AppConfig } from "@/lib/api";
 
 interface Gate {
@@ -74,6 +75,11 @@ export default function AdminSettings({ config, reload }: { config: AppConfig | 
       <h1>Admin settings</h1>
       {note && <p role="status" className="field-error">{note}</p>}
 
+      <nav aria-label="Admin pages" className="actions">
+        <Link className="btn btn--secondary" to="/reports">Numbers and exports</Link>
+        <Link className="btn btn--secondary" to="/safety">Safety incidents</Link>
+      </nav>
+
       <section aria-labelledby="identity">
         <h2 id="identity">Who runs this service</h2>
         <div className="field">
@@ -121,6 +127,30 @@ export default function AdminSettings({ config, reload }: { config: AppConfig | 
           </span>
           <textarea id="field-justification" value={justification} onChange={(e) => setJustification(e.target.value)} />
         </div>
+      </section>
+
+      <section aria-labelledby="retention">
+        <h2 id="retention">Keeping and deleting data</h2>
+        <p className="meta">
+          The nightly job does nothing until you turn it on, and it should stay off until someone has
+          actually read the retention schedule and decided the numbers are right. It never touches audit
+          records, safety incidents, or consent, and it skips anything under a hold. If it cannot read the
+          hold table, it deletes nothing at all.
+        </p>
+        <div className="check">
+          <input
+            id="flag-retention_sweep_enabled"
+            type="checkbox"
+            checked={Boolean((config as unknown as { flags?: Record<string, boolean> })?.flags?.retention_sweep_enabled)}
+            onChange={(e) => toggleFlag("retention_sweep_enabled", e.target.checked)}
+          />
+          <label htmlFor="flag-retention_sweep_enabled">Run the nightly deletion and anonymization job</label>
+        </div>
+        <p className="meta">
+          Defaults: precise location 7 days, tracking links 30, messages 180, notifications 90, rides
+          anonymized at 730, handoffs anonymized at 365. Override them in the retention schedule once the
+          privacy review sets them deliberately.
+        </p>
       </section>
 
       <section aria-labelledby="gates">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { revealRideDetails, transitionRide, type AppConfig } from "@/lib/api";
+import { revealRideDetails, startLocationSharing, stopLocationSharing, transitionRide, type ApiError, type AppConfig } from "@/lib/api";
 import { RouteStrip } from "@/components/RouteStrip";
 import { Emergency } from "@/components/Chrome";
 import { windowLabel } from "@/lib/ride-display";
@@ -17,6 +17,8 @@ export default function RideDetail({ config }: { config: AppConfig | null }) {
   const [data, setData] = useState<RevealResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [trackingNote, setTrackingNote] = useState<string | null>(null);
 
   const load = () =>
     revealRideDetails(rideId)
@@ -24,6 +26,20 @@ export default function RideDetail({ config }: { config: AppConfig | null }) {
       .catch((e) => setError((e as Error).message));
 
   useEffect(() => { void load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [rideId]);
+
+  async function toggleSharing() {
+    setBusy(true);
+    setTrackingNote(null);
+    try {
+      const r = sharing ? await stopLocationSharing(rideId) : await startLocationSharing(rideId);
+      setTrackingNote((r as { message: string }).message);
+      setSharing(!sharing);
+    } catch (e) {
+      setTrackingNote((e as ApiError).message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function cancel() {
     setBusy(true);
@@ -79,6 +95,26 @@ export default function RideDetail({ config }: { config: AppConfig | null }) {
             </p>
           )}
         </article>
+      )}
+
+      {config?.flags.live_location_enabled ? (
+        <section className="record" aria-labelledby="tracking">
+          <h3 id="tracking">Sharing where you are</h3>
+          <p>
+            Optional. If you turn it on, the coordinator and safety team can see where the car is while the
+            trip is happening. It stops on its own when the ride ends, and you can turn it off at any moment.
+            Your ride works exactly the same either way.
+          </p>
+          <button className="btn btn--secondary btn--block" onClick={toggleSharing} disabled={busy}>
+            {sharing ? "Turn location sharing off" : "Share where I am during this trip"}
+          </button>
+          {trackingNote && <p role="status" className="meta">{trackingNote}</p>}
+        </section>
+      ) : (
+        <p className="meta">
+          Live location is switched off for everyone during this pilot. Nothing about where you are is
+          collected.
+        </p>
       )}
 
       <Emergency config={config} />
