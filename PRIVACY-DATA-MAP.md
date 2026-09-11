@@ -21,6 +21,20 @@ their relationship to a ride requires, and stop showing it when the ride ends.
 | Background check vendor reference, status, category, dates | DriverCredential | Eligibility | Safety staff |
 | Incident narrative | SafetyIncident | Safeguarding | Safety staff and platform admins only |
 | Audit events | AuditLog | Accountability | Platform admins |
+| Vehicle make, model, colour, plate | Vehicle | So a rider can recognise the car | The matched rider before pickup; plate is field-secured otherwise |
+| Availability windows | DriverAvailability | Matching | The driver and staff |
+| Upload metadata and scan status | DriverCredential, IncidentAttachment | Deciding whether a file may be opened | Safety staff |
+| Check-in and escalation state | RideAssignment | Noticing a ride that has gone quiet | Dispatch and safety staff |
+| Delivery outcome and provider reference | Notification | Tracing whether a message actually arrived | Platform admins |
+| Participant authorization | OrganizationParticipantAuthorization | Proving a person said yes to an organization booking for them | The participant, that organization, and staff |
+| Pledges and fulfillment | ContributionPledge, ContributionFulfillment | Tracking what an organization offered and what arrived | That organization and platform admins |
+| Straight-line trip miles, volunteer minutes | RideRequest | Volunteer-hour and mileage reporting | Staff; aggregated only for everyone else |
+| Child's first name, last initial, date of birth | DependentProfile | Choosing the legally required restraint and identifying them at handoff | The verified guardian and staff; the assigned driver sees the name only, at pickup |
+| Child's height | DependentProfile | Only where it changes the restraint answer (the 4'9" booster exemption) | The verified guardian and staff |
+| Guardian authority and its document | GuardianRelationship | Proving legal authority to decide for a child | Staff only; the document is a private reference, never served unscanned |
+| Consent record and wording snapshot | ConsentRecord | Proving who agreed to what, on which version | The signer and staff |
+| Authorized adults and handoff PINs | AuthorizedAdult, HandoffRecord | Handing a child to the right person | The guardian and staff. The PIN is never in any driver projection |
+| Supervised messages | MessageThread, Message | Coordination that a coordinator can see | Thread participants and staff; every read of a child's thread is audited |
 
 ## What is never collected
 
@@ -67,6 +81,107 @@ Live location is disabled for the pilot and gated behind `privacy_security` and
 an active ride, shared only with the assigned driver, the rider, a verified
 guardian, an authorized scheduler where consent permits, and safety staff, via
 expiring unguessable tokens, and stops after completion.
+
+## The outage manifest
+
+`export-ride-manifest` deliberately assembles the most sensitive combination in
+the product — exact addresses, phone numbers, and verification codes for the
+day's confirmed rides — because a dispatcher working through an outage needs all
+three on paper. It is staff-only, needs a written purpose, is capped at 48 hours
+per pull, and writes an `export.sensitive` audit row. The response carries a
+handling notice telling the operator to keep it locked and shred it at the end
+of the day.
+
+## Automated watching
+
+`ride-checkin-sweep` reads ride timestamps every five minutes. It stores no new
+personal data: it writes an escalation level and a kind onto the assignment, an
+observation onto the ride timeline, and an alert to staff that names no address
+and no code. At urgent level it opens an incident so a person owns it — stating
+what was observed, explicitly not what happened.
+
+## Reports
+
+`build-report` is the only reporting endpoint, and it derives its scope from the
+caller's role rather than from what the caller asks for. An organization gets
+its own participants; a partner gets its own destinations; staff get everything.
+Scoping is applied before anything is counted, so a filter cannot be dropped on
+the way out.
+
+Any cell built from fewer than five distinct people is written as `suppressed`,
+including in CSV — never as a zero, so a reader can tell "none" from "too few to
+show". Staff see real numbers. Under-18 rides are excluded from every audience
+except staff. The fact set copied into a report carries no address, coordinate,
+phone number, verification code, operational note, or incident narrative, and a
+test asserts those field names are absent from the projection.
+
+A CSV export needs a written purpose of at least fifteen characters and writes
+an `export.sensitive` audit row with the purpose, the scope, and the row count.
+
+## Participant authorization
+
+An organization can only request rides for someone who has confirmed it
+themselves, in their own account. `request-participant-authorization` creates a
+`pending` record and has no code path that activates one — it never calls
+`update` on the record it just made. Only
+`confirm-participant-authorization` can activate it, and only when the caller is
+the participant. There is no staff override.
+
+Being someone's case manager, teacher, coach, or doctor is not authorization.
+For anyone under 18 the route is closed outright, because guardian consent is a
+different thing and lives in Milestone 4. Authorizations expire after a year and
+the person is asked again. Withdrawing one never cancels a booked ride silently:
+a coordinator is told so the rider is not left waiting.
+
+## Children
+
+The whole minor workflow is switched off. What follows describes how it is
+built, not something currently running.
+
+**No child account exists.** There is no `user_id`, email, or password field on
+`DependentProfile`, and nothing is ever collected from a child directly. That is
+the design premise for under-13s: COPPA review and verifiable parental consent
+would both be prerequisites for any child-facing feature, and none exists.
+
+**Minimum data.** A date of birth, because it decides which restraint the law
+requires. A height only in the 5-to-8 band where 4'9" changes the answer. A
+first name and last initial for the handoff. Nothing else.
+`manage-dependent-profile` refuses outright any payload containing a school,
+diagnosis, medication, IEP, custody detail, case number, SSN, immigration
+status, weight, or home address, and no such field is declared on the schema.
+
+**Authority is not consent.** `GuardianRelationship` records that an adult has
+verified legal authority; `ConsentRecord` records that they agreed to a specific
+trip on a specific wording version. Holding the first never implies the second.
+Verification is always a human act against a private document that has been
+scanned clean, with a re-verification date — there is no open-ended authority.
+Nobody verifies their own.
+
+**Who can never sign.** `canSignForMinor` is the one place that decides, and it
+refuses an organization scheduler, a referring adult (teacher, doctor, case
+manager, coach), a dispatcher, and self-signature. A professional relationship
+produces neither authority nor consent.
+
+**Withdrawal.** Immediate, no reason required, never refused. Any trip not yet
+started is stopped, open offers are withdrawn, assignments released, and
+dispatch told — without anything about the child in the message.
+
+**Handoff.** A child goes to a named, recorded adult who reads out a rotating
+PIN. The PIN is field-secured to the guardian and staff, is never sent to the
+driver's device in any projection, is never reused for that child, and expires.
+Every failure path ends in stop, stay with the child, call the safety line — and
+never in an alternative destination.
+
+**Messaging.** There is no thread configuration in which a driver and a child
+can talk. A child's thread must contain the verified guardian and must not
+contain the child; membership is re-checked on every post, so a thread cannot
+become unsafe by someone being added later. Attempts to share a phone number,
+email, or other app are refused outright on a child's thread and flagged to
+staff. Every read is audited as `access.minor_record`.
+
+**Restraints.** The thresholds are configurable data, not code, and ship
+unreviewed. While `restraint_policy_reviewed` is false, `checkMinorRide` blocks
+every minor ride with `restraint_policy_unreviewed`.
 
 ## Retention and holds
 

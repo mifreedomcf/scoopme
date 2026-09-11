@@ -29,10 +29,82 @@ passes the filters; waitlist it and say so to the rider.
 **During rides.** Watch "In progress". A ride sitting in `en_route` past its
 window, or in `arrived_pickup` without moving, is worth a phone call.
 
-**Credentials.** The expiring-within-30-days list is on the same board. A driver
-whose document expires becomes ineligible on the expiry date automatically —
-their offers vanish and a claim in flight is refused. Call them before that, not
+**Credentials.** The expiring-within-30-days list is on the same board. The
+overnight sweep marks lapsed documents expired, recomputes eligibility,
+withdraws that driver's open offers, and queues them a notice thirty days ahead.
+None of that needs you. What needs you is a phone call before the date, not
 after.
+
+Verifying a document is a two-person job by design: you cannot verify your own,
+and you cannot verify a file that has not been scanned clean. While no scanner
+is configured, that means credential verification is blocked — which is correct,
+and is one of the launch-gate items.
+
+**Escalations.** Every five minutes the check-in timers look at live rides. An
+amber notice means a ride is past a threshold; an urgent alert reaches safety
+staff and opens an incident. Treat both as "phone the driver", not as a verdict.
+The timers read timestamps, not the road. A deliberate move by the driver clears
+the escalation; the timer never decides on its own that things look fine again.
+
+## Organizations
+
+**Approving a scheduler.** An org admin proposes; you approve. Do not skip that
+step because someone is in a hurry — a scheduler can request rides for other
+people, so it is a privileged role with an audit trail.
+
+**Authorization.** A scheduler cannot book for anyone until that person has
+confirmed it in their own account. If a scheduler tells you the person "already
+agreed on the phone", the answer is still no: ask them to send the request and
+let the person press the button. There is no override, deliberately. For anyone
+under 18 the answer is no full stop until Milestone 4 and the safeguarding gates.
+
+**Pledges.** If an organization words a pledge as something in exchange for
+rides, the server rejects it and asks them to reword. Take the chance to say the
+thing out loud: rides are free, nobody works for one, and a pledge that falls
+through has no consequence for any participant. Decline a pledge freely when you
+cannot use it — the decline message already says access is unaffected.
+
+## Children
+
+**The answer today is no.** We do not carry under-18s. If a parent, school, or
+agency asks, say that plainly: the safeguarding policy, the consent wording, the
+car seat rules, and abuse and molestation cover all have to be signed off first,
+and every driver who could carry a child needs fingerprinting and a child abuse
+and neglect registry check on top of ordinary screening. None of that is done.
+
+The software agrees with you. Every part of the minor workflow refuses while the
+flag is off, and the flag cannot be switched on until those gates close.
+
+**When it is eventually on**, the things that will not bend:
+
+- A case manager, teacher, coach, or doctor can help arrange a trip. None of them
+  can consent. If someone says the family already agreed over the phone, the
+  answer is still no — the guardian signs, in their own account.
+- Verified authority is not consent. Each trip needs its own signature unless
+  counsel has approved time-limited standing consent, and that is separately off.
+- Consent withdrawn is consent gone, immediately, with no reason asked for. Any
+  trip that has not started stops.
+- The car seat rules in the system are our reading of the statute, not an
+  attorney's. Until `restraint_policy_reviewed` is set deliberately by someone
+  who has checked it, no minor ride can be approved at all.
+
+**Failed handoff.** The driver stops where they are, stays with the child, and
+calls. They do not drive somewhere else, they do not leave the child, and they do
+not decide that the person in front of them seems fine. When that call comes in,
+your job is to take the decision off the driver, not to ask them to assess it.
+
+## Reports
+
+Show partners and organizations their own numbers, not each other's. The
+software enforces that, but you should not try to work around it by pulling a
+staff report and forwarding it.
+
+Cells reading "too few to show" are withheld on purpose. Do not fill them in
+from memory, do not publish them as zero, and do not narrow the date range until
+a small cell becomes visible. If a partner needs a number that is suppressed, the
+honest answer is that too few people sit behind it to share safely.
+
+A CSV needs a written reason, and your name and that reason are recorded.
 
 ## Incidents
 
@@ -52,11 +124,11 @@ after.
 
 The platform is not the only copy of the day's plan.
 
-**Before service each day**, print or export the manifest: for every confirmed
-ride, the rider name and phone, the pickup address, the destination, the window,
-the driver name and phone, the vehicle description and plate, and the
-verification code. Store it in the locked cabinet at the dispatch desk. It is a
-sensitive document — shred it at end of day.
+**Before service each day**, pull the manifest from the bottom of the Dispatch
+board. Give the range and write why you need it — your name, the time, and your
+reason are recorded, because this is the one export that puts home addresses,
+phone numbers, and verification codes on one page. Print it, store it in the
+locked cabinet at the dispatch desk, and shred it at end of day.
 
 **If the app is down:**
 
