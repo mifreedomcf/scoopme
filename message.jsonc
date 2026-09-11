@@ -1,0 +1,23 @@
+{
+  "name": "Message",
+  "description": "One message in a supervised thread. Direct contact details are masked before storage. On a child's thread an attempt to share them is refused outright and flagged to staff rather than quietly stripped.",
+  "type": "object",
+  "properties": {
+    "thread_id": { "type": "string" },
+    "sender_user_id": { "type": "string" },
+    "sender_role": { "type": "string" },
+    "body": { "type": "string", "description": "Stored after masking. Never contains an exact address or a verification code." },
+    "original_flagged": { "type": "boolean", "default": false, "description": "The sender tried to share direct contact details." },
+    "redaction_codes": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "sent_at": { "type": "string", "format": "date-time" },
+    "read_by_user_ids": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["thread_id", "sender_user_id", "body", "sent_at"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

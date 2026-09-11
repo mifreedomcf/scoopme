@@ -1,0 +1,103 @@
+[
+  {
+    "entity": "Organization",
+    "data": {
+      "name": "Example Eastside Neighbors (TEST DATA)",
+      "short_name": "EEN-TEST",
+      "status": "approved",
+      "primary_contact_name": "Testerson Example",
+      "primary_contact_email": "scheduler@example.invalid",
+      "primary_contact_phone": "555-0100",
+      "mou_on_file": false
+    }
+  },
+  {
+    "entity": "UserProfile",
+    "data": {
+      "user_id": "test-rider-0001",
+      "email": "rider.one@example.invalid",
+      "display_name": "Rita T. (TEST)",
+      "preferred_language": "en",
+      "communication_preference": "sms",
+      "phone": "555-0111",
+      "legal_first_name": "Rita",
+      "legal_last_name": "Testcase",
+      "onboarding_complete": true
+    }
+  },
+  {
+    "entity": "RiderProfile",
+    "data": {
+      "user_id": "test-rider-0001",
+      "display_name": "Rita T. (TEST)",
+      "mobility_needs": [
+        "none"
+      ],
+      "assistance_level": "curb_to_curb",
+      "language_preference": "en",
+      "saved_pickup_label": "Home (TEST)",
+      "saved_pickup_address": "1 Example Way, Detroit, MI 48205",
+      "saved_pickup_zip": "48205",
+      "saved_pickup_area_label": "Northeast Detroit (48205)"
+    }
+  },
+  {
+    "entity": "UserProfile",
+    "data": {
+      "user_id": "test-driver-0001",
+      "email": "driver.one@example.invalid",
+      "display_name": "Dana E. (TEST)",
+      "phone": "555-0122",
+      "legal_first_name": "Dana",
+      "legal_last_name": "Exampleton",
+      "date_of_birth": "1985-04-02",
+      "onboarding_complete": true
+    }
+  },
+  {
+    "entity": "DriverProfile",
+    "data": {
+      "user_id": "test-driver-0001",
+      "display_name": "Dana E. (TEST)",
+      "home_area_label": "Northeast Detroit (TEST)",
+      "approval_tier": "none",
+      "eligibility_status": "ineligible",
+      "eligibility_reason_code": "seed_data_not_screened",
+      "languages": [
+        "en",
+        "es"
+      ],
+      "accepts_service_animals": true,
+      "max_travel_miles": 15
+    }
+  },
+  {
+    "entity": "UserProfile",
+    "data": {
+      "user_id": "test-driver-0002",
+      "email": "driver.two@example.invalid",
+      "display_name": "Sam Q. (TEST)",
+      "phone": "555-0133",
+      "legal_first_name": "Sam",
+      "legal_last_name": "Quality",
+      "date_of_birth": "1979-11-20",
+      "onboarding_complete": true
+    }
+  },
+  {
+    "entity": "DriverProfile",
+    "data": {
+      "user_id": "test-driver-0002",
+      "display_name": "Sam Q. (TEST)",
+      "home_area_label": "Near East Side (TEST)",
+      "approval_tier": "none",
+      "eligibility_status": "ineligible",
+      "eligibility_reason_code": "seed_data_not_screened",
+      "languages": [
+        "en"
+      ],
+      "accepts_service_animals": false,
+      "max_travel_miles": 10
+    }
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "name": "DependentProfile",
+  "description": "A child represented through a guardian-managed profile. There is no child account and no child login. We collect the minimum needed to choose a legal restraint and complete a safe handoff — nothing about school, diagnosis, custody arrangements, or why the trip is needed. Nothing on this entity is ever exposed to the public or to an unassigned driver.",
+  "type": "object",
+  "properties": {
+    "managing_guardian_user_id": { "type": "string", "description": "The verified guardian who maintains this profile." },
+    "first_name": { "type": "string", "description": "Given name only. Shown to the assigned driver at pickup and to nobody else.", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "last_initial": { "type": "string", "maxLength": 1 },
+    "date_of_birth": { "type": "string", "format": "date", "description": "Used only to select the legally required restraint and to confirm the child is a minor.", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "height_inches": { "type": "number", "description": "Optional. Collected only where it changes which restraint is required (the booster height exemption).", "rls": { "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] } } },
+    "guardian_states_exceeds_rear_facing_limits": { "type": "boolean", "description": "Guardian's statement about the seat manufacturer's limits. We do not ask for weight." },
+    "mobility_needs": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "language_preference": { "type": "string", "default": "en" },
+    "assistance_level": { "type": "string", "enum": ["curb_to_curb", "door_to_door", "hand_to_hand"], "default": "hand_to_hand", "description": "A child is always handed over to a named adult. hand_to_hand is the floor, not the ceiling." },
+    "notes_for_dispatch": { "type": "string", "description": "Practical notes only. Never a diagnosis, a school, or a reason for travel.", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "active": { "type": "boolean", "default": true },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["managing_guardian_user_id", "date_of_birth"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

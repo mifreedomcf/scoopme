@@ -1,0 +1,32 @@
+{
+  "name": "DriverProfile",
+  "description": "An approved volunteer driver. Eligibility is derived server-side from credential state; it is never a field a driver can set. There is no browsable driver directory: home address and credential detail are admin-only.",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "application_id": { "type": "string" },
+    "display_name": { "type": "string", "description": "First name plus last initial, shown to a matched rider only." },
+    "photo_url": { "type": "string", "format": "uri", "description": "Shown to a matched rider before pickup for driver verification." },
+    "phone": { "type": "string", "rls": { "read": { "user_condition": { "role": "admin" } } } },
+    "home_area_label": { "type": "string", "description": "Coarse area only. The home address is not stored on this entity." },
+    "approval_tier": { "type": "string", "enum": ["none", "adult_transport_approved", "minor_transport_approved"], "default": "none", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "eligibility_status": { "type": "string", "enum": ["ineligible", "eligible", "suspended_expired_credential", "suspended_admin", "on_incident_hold"], "default": "ineligible", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "eligibility_reason_code": { "type": "string", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "eligibility_computed_at": { "type": "string", "format": "date-time" },
+    "eligibility_blocking": { "type": "array", "items": { "type": "string" }, "description": "Credential types currently missing, unverified, or expired. Derived, never set by the driver." },
+    "admin_suspended": { "type": "boolean", "default": false, "description": "Set by staff. Survives recomputation: an admin suspension is never cleared by a passing credential check.", "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "on_incident_hold": { "type": "boolean", "default": false, "rls": { "write": { "user_condition": { "role": "admin" } } } },
+    "languages": { "type": "array", "items": { "type": "string" }, "default": ["en"] },
+    "accepts_service_animals": { "type": "boolean", "default": true },
+    "max_travel_miles": { "type": "number", "default": 15 },
+    "approved_at": { "type": "string", "format": "date-time" },
+    "deleted_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["user_id"],
+  "rls": {
+    "create": false,
+    "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] },
+    "update": false,
+    "delete": false
+  }
+}

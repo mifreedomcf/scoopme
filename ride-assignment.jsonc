@@ -1,0 +1,25 @@
+{
+  "name": "RideAssignment",
+  "description": "The single active driver assignment for a ride. A unique active row per ride is enforced by a claim token written under a conditional guard in claim-ride; two drivers can never hold one ride.",
+  "type": "object",
+  "properties": {
+    "ride_request_id": { "type": "string" },
+    "driver_profile_id": { "type": "string" },
+    "driver_user_id": { "type": "string" },
+    "vehicle_id": { "type": "string" },
+    "assignment_kind": { "type": "string", "enum": ["driver_claim", "dispatcher_assignment"], "default": "driver_claim" },
+    "assigned_by_email": { "type": "string", "format": "email" },
+    "claim_token": { "type": "string", "description": "Idempotency/lock token. One active token per ride_request_id." },
+    "is_active": { "type": "boolean", "default": true },
+    "details_revealed_at": { "type": "string", "format": "date-time", "description": "When exact addresses were first released to this driver." },
+    "reveal_window_opens_at": { "type": "string", "format": "date-time" },
+    "last_check_in_at": { "type": "string", "format": "date-time", "description": "Last time the assigned driver or rider touched this ride. Drives the silence timer." },
+    "escalation_level": { "type": "integer", "default": 0, "minimum": 0, "maximum": 2, "description": "0 none, 1 notice to dispatch, 2 urgent to dispatch and safety staff. Raised by ride-checkin-sweep; only a person clears it." },
+    "escalation_kind": { "type": "string", "description": "Which timer fired, e.g. overdue_arrival_pickup." },
+    "escalation_last_at": { "type": "string", "format": "date-time" },
+    "released_at": { "type": "string", "format": "date-time" },
+    "release_reason_code": { "type": "string" }
+  },
+  "required": ["ride_request_id", "driver_profile_id", "claim_token"],
+  "rls": { "create": false, "read": { "$or": [{ "created_by": "{{user.email}}" }, { "user_condition": { "role": "admin" } }] }, "update": false, "delete": false }
+}

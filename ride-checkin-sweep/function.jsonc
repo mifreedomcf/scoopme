@@ -1,0 +1,18 @@
+// Check-in timers for rides that are underway.
+{
+  "name": "ride-checkin-sweep",
+  "entry": "entry.ts",
+  "automations": [
+    {
+      "type": "scheduled",
+      "name": "ride_checkin_watch",
+      "description": "Raises dispatcher and safety alerts for overdue departures, arrivals, handoffs, and loss of contact.",
+      "is_active": true,
+
+      "schedule_mode": "recurring",
+      "schedule_type": "simple",
+      "repeat_unit": "minutes",
+      "repeat_interval": 5
+    }
+  ]
+}

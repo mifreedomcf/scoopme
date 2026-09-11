@@ -1,0 +1,66 @@
+{
+  "name": "SystemConfig",
+  "description": "Singleton-style server-enforced configuration and feature flags. Exactly one active row (config_key = 'active'). Clients may never write; all changes go through the admin-update-config backend function, which re-checks launch gates and writes an AuditLog entry.",
+  "type": "object",
+  "properties": {
+    "config_key": { "type": "string", "default": "active", "description": "Always 'active' for the live row." },
+
+    "operator_legal_name": { "type": "string", "default": "Pilot Operator — To Be Confirmed", "description": "Legal operator of the platform. Admin-editable. Never auto-populated with a partner's name." },
+    "brand_name": { "type": "string", "default": "Scoop Me", "description": "Product name shown in the UI." },
+    "brand_tagline": { "type": "string", "default": "Free scheduled rides to community resources." },
+    "brand_logo_url": { "type": "string", "format": "uri", "description": "Public logo URL. Admin-editable." },
+    "brand_color_primary": { "type": "string", "default": "#0B5F8A" },
+    "brand_color_accent": { "type": "string", "default": "#F0A202" },
+    "support_email": { "type": "string", "format": "email", "default": "support@example.invalid" },
+    "support_phone": { "type": "string", "default": "", "description": "Staffed support line. Blank until confirmed; UI hides the number when blank." },
+    "safety_phone": { "type": "string", "default": "", "description": "Safety team line, distinct from 911." },
+
+    "pilot_mode": { "type": "boolean", "default": true },
+    "service_area_label": { "type": "string", "default": "City of Detroit, Michigan" },
+    "service_area_city": { "type": "string", "default": "Detroit" },
+    "service_area_state": { "type": "string", "default": "MI" },
+    "allowed_destination_zip_codes": { "type": "array", "items": { "type": "string" }, "default": ["48205"] },
+    "allowed_pickup_zip_codes": { "type": "array", "items": { "type": "string" }, "default": [], "description": "Empty means: any address that passes the Detroit city-boundary check." },
+
+    "adult_rides_enabled": { "type": "boolean", "default": true },
+    "minor_rides_enabled": { "type": "boolean", "default": false },
+    "same_day_rides_enabled": { "type": "boolean", "default": false },
+    "direct_driver_tips_enabled": { "type": "boolean", "default": false },
+    "platform_donations_enabled": { "type": "boolean", "default": false },
+    "organization_in_kind_contributions_enabled": { "type": "boolean", "default": true },
+    "live_location_enabled": { "type": "boolean", "default": false },
+    "ride_fulfillment_enabled": { "type": "boolean", "default": false, "description": "Master switch for offering/assigning/performing real rides. Blocked until the launch gate is complete." },
+
+    "background_check_provider_mode": { "type": "string", "enum": ["mock_pending_review", "live"], "default": "mock_pending_review" },
+    "geocoder_provider_mode": { "type": "string", "enum": ["mock", "live"], "default": "mock" },
+
+    "minimum_request_lead_hours": { "type": "integer", "default": 24, "minimum": 0 },
+    "minimum_driver_age": { "type": "integer", "default": 21, "minimum": 21, "description": "Admin configurable but never below the applicable legal minimum. Server rejects values under 21." },
+    "minimum_minor_transport_driver_age": { "type": "integer", "default": 25, "minimum": 25, "description": "Admin may raise only. Server rejects any value below the stored current value." },
+
+    "standing_minor_consent_approved": { "type": "boolean", "default": false, "description": "False until counsel approves the wording of a time-limited standing consent. While false, every trip for a child needs its own signature." },
+    "restraint_policy_reviewed": { "type": "boolean", "default": false, "description": "False until an attorney has checked the restraint table below against the statute. While false, no minor ride can be approved." },
+    "restraint_jurisdiction": { "type": "string", "default": "MI" },
+    "restraint_rear_facing_max_age": { "type": "integer", "default": 2, "minimum": 0, "description": "DRAFT — REQUIRES LEGAL REVIEW. Michigan, effective 2 April 2025. Confirm against MCL 257.710d." },
+    "restraint_forward_facing_max_age": { "type": "integer", "default": 5, "minimum": 0 },
+    "restraint_booster_max_age": { "type": "integer", "default": 8, "minimum": 0 },
+    "restraint_booster_height_exemption_inches": { "type": "number", "default": 57, "description": "4 feet 9 inches." },
+    "restraint_rear_seat_required_under_age": { "type": "integer", "default": 13, "minimum": 0 },
+    "restraint_seat_belt_required_under_age": { "type": "integer", "default": 16, "minimum": 0 },
+    "driver_tip_annual_cap_cents": { "type": "integer", "default": 0, "minimum": 0, "description": "0 while tipping is disabled. A cap is an operational limit, never a tax-free threshold." },
+
+    "max_volunteer_travel_miles": { "type": "number", "default": 15 },
+    "vehicle_inspection_age_years": { "type": "integer", "default": 5, "description": "Vehicles this old or older require annual licensed-mechanic inspection tracking." },
+    "ride_request_rate_limit_per_day": { "type": "integer", "default": 5 },
+
+    "legal_content_approved": { "type": "boolean", "default": false, "description": "False => every legal/policy screen renders the DRAFT — REQUIRES LEGAL/INSURANCE APPROVAL banner." },
+    "config_version": { "type": "integer", "default": 1, "description": "Incremented on every admin write. Used for optimistic concurrency." }
+  },
+  "required": ["config_key"],
+  "rls": {
+    "create": false,
+    "read": true,
+    "update": false,
+    "delete": false
+  }
+}
