@@ -1,0 +1,19 @@
+// Nightly deletion and anonymization. Does nothing until an administrator
+// enables retention_sweep_enabled, after the schedule has been reviewed.
+{
+  "name": "retention-sweep",
+  "entry": "entry.ts",
+  "automations": [
+    {
+      "type": "scheduled",
+      "name": "nightly_retention_sweep",
+      "description": "Deletes or anonymizes records past their retention period, skipping anything under a legal, incident, audit, insurance, tax or safeguarding hold.",
+      "is_active": true,
+
+      "schedule_mode": "recurring",
+      "schedule_type": "cron",
+      // 06:00 UTC, after the credential sweep, before the service day.
+      "cron_expression": "0 6 * * *"
+    }
+  ]
+}

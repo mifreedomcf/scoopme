@@ -1,18 +1,10 @@
-// Scoop Me — Base44 project configuration
-// Docs: https://docs.base44.com/developers/backend/overview/project-structure
+// Auth configuration. Push with `npx base44 auth push`.
+// Reconcile against `npx base44 auth pull` for your app before deploying.
 {
-  "name": "scoop-me",
-  "description": "Scoop Me — free, scheduled community rides to local resources. Closed Detroit pilot.",
-  "visibility": "private", // Pilot stays private until the launch gate is complete.
-
-  "entitiesDir": "./entities",
-  "functionsDir": "./functions",
-  "authDir": "./auth",
-
-  "site": {
-    "outputDirectory": "../dist",
-    "installCommand": "npm install",
-    "buildCommand": "npm run build",
-    "serveCommand": "npm run dev"
+  "passwordLogin": {
+    "enabled": true
+  },
+  "socialLogin": {
+    "google": { "enabled": true }
   }
 }
